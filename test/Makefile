@@ -398,29 +398,29 @@ FreeRTOS/FreeRTOS/Source/timers.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/freertos.dir/build.make CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/timers.c.s
 .PHONY : FreeRTOS/FreeRTOS/Source/timers.c.s
 
-console.o: console.c.o
-.PHONY : console.o
+hooks.o: hooks.c.o
+.PHONY : hooks.o
 
 # target to build an object file
-console.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/posix_demo.dir/build.make CMakeFiles/posix_demo.dir/console.c.o
-.PHONY : console.c.o
+hooks.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/posix_demo.dir/build.make CMakeFiles/posix_demo.dir/hooks.c.o
+.PHONY : hooks.c.o
 
-console.i: console.c.i
-.PHONY : console.i
+hooks.i: hooks.c.i
+.PHONY : hooks.i
 
 # target to preprocess a source file
-console.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/posix_demo.dir/build.make CMakeFiles/posix_demo.dir/console.c.i
-.PHONY : console.c.i
+hooks.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/posix_demo.dir/build.make CMakeFiles/posix_demo.dir/hooks.c.i
+.PHONY : hooks.c.i
 
-console.s: console.c.s
-.PHONY : console.s
+hooks.s: hooks.c.s
+.PHONY : hooks.s
 
 # target to generate assembly for a file
-console.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/posix_demo.dir/build.make CMakeFiles/posix_demo.dir/console.c.s
-.PHONY : console.c.s
+hooks.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/posix_demo.dir/build.make CMakeFiles/posix_demo.dir/hooks.c.s
+.PHONY : hooks.c.s
 
 main.o: main.c.o
 .PHONY : main.o
@@ -511,9 +511,9 @@ help:
 	@echo "... FreeRTOS/FreeRTOS/Source/timers.o"
 	@echo "... FreeRTOS/FreeRTOS/Source/timers.i"
 	@echo "... FreeRTOS/FreeRTOS/Source/timers.s"
-	@echo "... console.o"
-	@echo "... console.i"
-	@echo "... console.s"
+	@echo "... hooks.o"
+	@echo "... hooks.i"
+	@echo "... hooks.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

@@ -1,0 +1,36 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Clean",
+			"type": "shell",
+			"options": {
+				"cwd": "${workspaceFolder}/test",
+			},
+			"command": "make clean",
+		},
+		{
+			"label": "Run",
+			"type": "shell",
+			"options": {
+				"cwd": "${workspaceFolder}/test",
+			},
+			"command": "make run",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+		},
+		{
+			// Generate compile_commands.json uwing compiledb
+			"label": "CompileDB",
+			"type": "shell",
+			"options": {
+				"cwd": "${workspaceFolder}/test",
+			},
+			"command": "compiledb -n make",
+
+
+		}
+	]
+}

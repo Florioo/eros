@@ -1,0 +1,13 @@
+{
+    "configurations": [
+        {
+            "name": "gcc-configprovider",
+            "cStandard": "c17",
+            "cppStandard": "gnu++14",
+            "intelliSenseMode": "windows-gcc-arm",
+            "compileCommands": "${workspaceFolder}/test/compile_commands.json",
+            "configurationProvider": "ms-vscode.makefile-tools"
+        }
+    ],
+    "version": 4
+}

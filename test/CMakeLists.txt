@@ -52,7 +52,7 @@ add_executable(${PROJECT_NAME}
     ../src/eros.c
     main.c
     FreeRTOSConfig.h
-    console.h console.c
+    hooks.c
 )
 
 # Link FreeRTOS as a static library
