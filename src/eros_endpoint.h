@@ -4,7 +4,6 @@
 
 #ifndef EROS_ENDPOINT_H
 #define EROS_ENDPOINT_H
-typedef struct eros_router_t eros_router_t;
 
 typedef enum
 {
@@ -19,7 +18,10 @@ typedef struct
     QueueHandle_t queue;
 } eros_buffered_endpoint_t;
 
-typedef void (*eros_package_callback_t)(eros_package_t *package);
+typedef struct eros_router_t eros_router_t;
+typedef struct eros_endpoint_t eros_endpoint_t;
+
+typedef void (*eros_package_callback_t)(eros_endpoint_t *endpoint, eros_package_t *package);
 
 typedef struct
 {
@@ -38,7 +40,7 @@ typedef struct
     eros_package_callback_t callback;
 } eros_unbuffered_gateway_endpoint_t;
 
-typedef struct
+struct eros_endpoint_t
 {
     const eros_id_t id;
     eros_router_t *router;
@@ -51,8 +53,7 @@ typedef struct
         eros_buffered_gateway_endpoint_t buffered_gateway_endpoint;
         eros_unbuffered_gateway_endpoint_t unbuffered_gateway_endpoint;
     } endpoint;
-
-} eros_endpoint_t;
+};
 
 eros_endpoint_t *eros_buffered_endpoint_new(int id, eros_router_t *router, int queue_size);
 eros_endpoint_t *eros_unbuffered_endpoint_new(int id, eros_router_t *router, eros_package_callback_t callback);

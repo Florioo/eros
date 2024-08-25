@@ -23,6 +23,8 @@ typedef struct
     int8_t id;
 } receive_task_config_t;
 
+static void create_unbuffered_receiver(receive_task_config_t *config);
+
 int main(void)
 {
     eros_router_t *router = eros_router_new(1, 16);
@@ -41,6 +43,19 @@ int main(void)
     task2_config.router = router;
 
     xTaskCreate(receiver_task, "receiver", 2048, &task2_config, 1, NULL);
+
+    receive_task_config_t task3_config = {
+        .id = 3,
+        .router = router,
+    };
+
+    create_unbuffered_receiver(&task3_config);
+
+    receive_task_config_t task4_config = {
+        .id = 4,
+        .router = router,
+    };
+    create_unbuffered_receiver(&task4_config);
 
     vTaskStartScheduler();
 
@@ -92,7 +107,21 @@ static void receiver_task(void *p)
             continue;
         }
 
-        printf("Received: %s\n", package->data);
+        printf("Received on %d: %s\n", endpoint->id.id, package->data);
         eros_package_delete(package);
     }
+}
+
+static void unbuffered_callback(eros_endpoint_t *endpoint, eros_package_t *package)
+{
+    printf("Unbuffered Received on %d: %s\n", endpoint->id.id, package->data);
+}
+
+static void create_unbuffered_receiver(receive_task_config_t *config)
+{
+
+    eros_endpoint_t *endpoint = eros_unbuffered_endpoint_new(config->id, config->router, unbuffered_callback);
+
+    eros_router_register_endpoint(config->router, endpoint);
+    eros_endpoint_subscribe_group(endpoint, 1);
 }

@@ -255,10 +255,10 @@ int eros_endpoint_send(eros_endpoint_t *endpoint, eros_package_t *package, TickT
         return 0;
 
     case EROS_ENDPOINT_UNBUFFERED:
-        endpoint->endpoint.unbuffered_endpoint.callback(package);
+        endpoint->endpoint.unbuffered_endpoint.callback(endpoint, package);
         return 0;
     case EROS_UNBUFFERED_GATEWAY:
-        endpoint->endpoint.unbuffered_gateway_endpoint.callback(package);
+        endpoint->endpoint.unbuffered_gateway_endpoint.callback(endpoint, package);
         return 0;
 
     default:
