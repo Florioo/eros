@@ -14,7 +14,7 @@
 #include "eros.h"
 #include <string.h>
 
-static void sender_task(void *p);
+static void server_task(void *p);
 static void receiver_task(void *p);
 
 eros_router_t router;
@@ -29,7 +29,7 @@ int main(void)
 {
     router = eros_router_init(1);
     printf("Router %p\n", &router);
-    xTaskCreate(sender_task, "generator", 2048, NULL, 1, NULL);
+    xTaskCreate(server_task, "generator", 2048, NULL, 1, NULL);
 
     static receive_task_config_t task1_config = {
         .router = &router,
@@ -52,7 +52,7 @@ int main(void)
     }
 }
 
-static void sender_task(void *p)
+static void server_task(void *p)
 {
     (void)p;
 

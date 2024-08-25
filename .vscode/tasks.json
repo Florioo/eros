@@ -23,6 +23,20 @@
 			},
 			"problemMatcher": [],
 			"dependsOn": "Cmake"
+		},
+		{
+			"label": "Run2",
+			"type": "shell",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"command": "cmake --build build --target run2",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [],
+			"dependsOn": "Cmake"
 		}
 	]
 }

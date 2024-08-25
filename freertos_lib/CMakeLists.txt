@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-# project(linux_freertos_test)
-
+project(freertos_linux_project)
 
 # Set the FreeRTOS source directory
 set(FREERTOS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/FreeRTOS/FreeRTOS")
@@ -15,7 +14,6 @@ list(APPEND FREERTOS_SOURCES "${FREERTOS_DIR}/Source/portable/ThirdParty/GCC/Pos
 list(APPEND FREERTOS_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/hooks.c")
 
 
-
 # Create the FreeRTOS static library
 add_library(linux_freertos STATIC ${FREERTOS_SOURCES})
 
@@ -28,9 +26,6 @@ target_include_directories(linux_freertos PUBLIC
     ${FREERTOS_DIR}/Demo/Posix_GCC
     .
 )
-
-
-
 
 target_link_libraries(linux_freertos pthread)
 # target_link_libraries(linux_freertos freertos)

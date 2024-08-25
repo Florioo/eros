@@ -1,3 +1,6 @@
 [submodule "freertos_lib/FreeRTOS"]
 	path = freertos_lib/FreeRTOS
 	url = https://github.com/FreeRTOS/FreeRTOS.git
+[submodule "test/Unity"]
+	path = test/Unity
+	url = https://github.com/ThrowTheSwitch/Unity.git
