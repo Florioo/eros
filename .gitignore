@@ -1,6 +1,7 @@
-build
-CMakeFiles
-CMakeCache.txt
-cmake_install.cmake
-libfreertos.a
+**.a
+**.cmake
+**/CMakeFiles
+**/CMakeCache.txt
+**/Makefile
 compile_commands.json
+**/build/

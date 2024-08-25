@@ -2,12 +2,13 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "Clean",
+			"label": "Cmake",
 			"type": "shell",
 			"options": {
 				"cwd": "${workspaceFolder}"
 			},
-			"command": "make clean"
+			"command": "cmake -B build -S .",
+			"problemMatcher": []
 		},
 		{
 			"label": "Run",
@@ -15,11 +16,13 @@
 			"options": {
 				"cwd": "${workspaceFolder}"
 			},
-			"command": "make run",
+			"command": "cmake --build build --target run",
 			"group": {
 				"kind": "build",
 				"isDefault": true
-			}
+			},
+			"problemMatcher": [],
+			"dependsOn": "Cmake"
 		}
 	]
 }
