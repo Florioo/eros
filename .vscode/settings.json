@@ -1,6 +1,14 @@
 {
     "files.associations": {
         "console.h": "c",
-        "cstdint": "c"
-    }
+        "cstdint": "c",
+        "stdint.h": "c",
+        "stdint-gcc.h": "c",
+        "stdlib.h": "c",
+        "eros.h": "c",
+        "array": "c",
+        "string": "c",
+        "string_view": "c"
+    },
+    "cmake.sourceDirectory": "/root/dev/eros/test"
 }

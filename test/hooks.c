@@ -18,6 +18,7 @@ and timer tasks.  This is the stack that will be used by the timer task.  It is
 declared here, as a global, so it can be checked by a test that is implemented
 in a different file. */
 StackType_t uxTimerTaskStack[configTIMER_TASK_STACK_DEPTH];
+void traceOnEnter();
 
 void vApplicationMallocFailedHook(void)
 {

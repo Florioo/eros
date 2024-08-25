@@ -31,9 +31,6 @@ default_target: all
 
 .SUFFIXES: .hpux_make_needs_suffix_list
 
-# Produce verbose output by default.
-VERBOSE = 1
-
 # Command-line flag to silence nested $(MAKE).
 $(VERBOSE)MAKESILENT = -s
 
@@ -60,10 +57,10 @@ RM = /root/tools/.espressif/tools/cmake/3.24.0/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /root/dev/eros/test
+CMAKE_SOURCE_DIR = /root/dev/eros
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /root/dev/eros/test
+CMAKE_BINARY_DIR = /root/dev/eros
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -90,14 +87,14 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /root/dev/eros/test/CMakeFiles /root/dev/eros/test//CMakeFiles/progress.marks
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /root/dev/eros/test/CMakeFiles 0
+	cd /root/dev/eros && $(CMAKE_COMMAND) -E cmake_progress_start /root/dev/eros/CMakeFiles /root/dev/eros/test//CMakeFiles/progress.marks
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /root/dev/eros/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 clean
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/clean
 .PHONY : clean
 
 # The main clean target
@@ -106,56 +103,59 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 preinstall
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 preinstall
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	$(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /root/dev/eros && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
-#=============================================================================
-# Target rules for targets named posix_demo
+# Convenience name for target.
+test/CMakeFiles/posix_demo.dir/rule:
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/posix_demo.dir/rule
+.PHONY : test/CMakeFiles/posix_demo.dir/rule
 
-# Build rule for target.
-posix_demo: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 posix_demo
+# Convenience name for target.
+posix_demo: test/CMakeFiles/posix_demo.dir/rule
 .PHONY : posix_demo
 
 # fast build rule for target.
 posix_demo/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/posix_demo.dir/build.make CMakeFiles/posix_demo.dir/build
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/posix_demo.dir/build.make test/CMakeFiles/posix_demo.dir/build
 .PHONY : posix_demo/fast
 
-#=============================================================================
-# Target rules for targets named freertos
+# Convenience name for target.
+test/CMakeFiles/freertos.dir/rule:
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/freertos.dir/rule
+.PHONY : test/CMakeFiles/freertos.dir/rule
 
-# Build rule for target.
-freertos: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 freertos
+# Convenience name for target.
+freertos: test/CMakeFiles/freertos.dir/rule
 .PHONY : freertos
 
 # fast build rule for target.
 freertos/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/freertos.dir/build.make CMakeFiles/freertos.dir/build
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/freertos.dir/build.make test/CMakeFiles/freertos.dir/build
 .PHONY : freertos/fast
 
-#=============================================================================
-# Target rules for targets named run
+# Convenience name for target.
+test/CMakeFiles/run.dir/rule:
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/run.dir/rule
+.PHONY : test/CMakeFiles/run.dir/rule
 
-# Build rule for target.
-run: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 run
+# Convenience name for target.
+run: test/CMakeFiles/run.dir/rule
 .PHONY : run
 
 # fast build rule for target.
 run/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/run.dir/build.make CMakeFiles/run.dir/build
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/run.dir/build.make test/CMakeFiles/run.dir/build
 .PHONY : run/fast
 
 FreeRTOS/FreeRTOS/Source/croutine.o: FreeRTOS/FreeRTOS/Source/croutine.c.o
@@ -163,7 +163,7 @@ FreeRTOS/FreeRTOS/Source/croutine.o: FreeRTOS/FreeRTOS/Source/croutine.c.o
 
 # target to build an object file
 FreeRTOS/FreeRTOS/Source/croutine.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/freertos.dir/build.make CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/croutine.c.o
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/freertos.dir/build.make test/CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/croutine.c.o
 .PHONY : FreeRTOS/FreeRTOS/Source/croutine.c.o
 
 FreeRTOS/FreeRTOS/Source/croutine.i: FreeRTOS/FreeRTOS/Source/croutine.c.i
@@ -171,7 +171,7 @@ FreeRTOS/FreeRTOS/Source/croutine.i: FreeRTOS/FreeRTOS/Source/croutine.c.i
 
 # target to preprocess a source file
 FreeRTOS/FreeRTOS/Source/croutine.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/freertos.dir/build.make CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/croutine.c.i
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/freertos.dir/build.make test/CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/croutine.c.i
 .PHONY : FreeRTOS/FreeRTOS/Source/croutine.c.i
 
 FreeRTOS/FreeRTOS/Source/croutine.s: FreeRTOS/FreeRTOS/Source/croutine.c.s
@@ -179,7 +179,7 @@ FreeRTOS/FreeRTOS/Source/croutine.s: FreeRTOS/FreeRTOS/Source/croutine.c.s
 
 # target to generate assembly for a file
 FreeRTOS/FreeRTOS/Source/croutine.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/freertos.dir/build.make CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/croutine.c.s
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/freertos.dir/build.make test/CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/croutine.c.s
 .PHONY : FreeRTOS/FreeRTOS/Source/croutine.c.s
 
 FreeRTOS/FreeRTOS/Source/event_groups.o: FreeRTOS/FreeRTOS/Source/event_groups.c.o
@@ -187,7 +187,7 @@ FreeRTOS/FreeRTOS/Source/event_groups.o: FreeRTOS/FreeRTOS/Source/event_groups.c
 
 # target to build an object file
 FreeRTOS/FreeRTOS/Source/event_groups.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/freertos.dir/build.make CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/event_groups.c.o
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/freertos.dir/build.make test/CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/event_groups.c.o
 .PHONY : FreeRTOS/FreeRTOS/Source/event_groups.c.o
 
 FreeRTOS/FreeRTOS/Source/event_groups.i: FreeRTOS/FreeRTOS/Source/event_groups.c.i
@@ -195,7 +195,7 @@ FreeRTOS/FreeRTOS/Source/event_groups.i: FreeRTOS/FreeRTOS/Source/event_groups.c
 
 # target to preprocess a source file
 FreeRTOS/FreeRTOS/Source/event_groups.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/freertos.dir/build.make CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/event_groups.c.i
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/freertos.dir/build.make test/CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/event_groups.c.i
 .PHONY : FreeRTOS/FreeRTOS/Source/event_groups.c.i
 
 FreeRTOS/FreeRTOS/Source/event_groups.s: FreeRTOS/FreeRTOS/Source/event_groups.c.s
@@ -203,7 +203,7 @@ FreeRTOS/FreeRTOS/Source/event_groups.s: FreeRTOS/FreeRTOS/Source/event_groups.c
 
 # target to generate assembly for a file
 FreeRTOS/FreeRTOS/Source/event_groups.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/freertos.dir/build.make CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/event_groups.c.s
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/freertos.dir/build.make test/CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/event_groups.c.s
 .PHONY : FreeRTOS/FreeRTOS/Source/event_groups.c.s
 
 FreeRTOS/FreeRTOS/Source/list.o: FreeRTOS/FreeRTOS/Source/list.c.o
@@ -211,7 +211,7 @@ FreeRTOS/FreeRTOS/Source/list.o: FreeRTOS/FreeRTOS/Source/list.c.o
 
 # target to build an object file
 FreeRTOS/FreeRTOS/Source/list.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/freertos.dir/build.make CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/list.c.o
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/freertos.dir/build.make test/CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/list.c.o
 .PHONY : FreeRTOS/FreeRTOS/Source/list.c.o
 
 FreeRTOS/FreeRTOS/Source/list.i: FreeRTOS/FreeRTOS/Source/list.c.i
@@ -219,7 +219,7 @@ FreeRTOS/FreeRTOS/Source/list.i: FreeRTOS/FreeRTOS/Source/list.c.i
 
 # target to preprocess a source file
 FreeRTOS/FreeRTOS/Source/list.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/freertos.dir/build.make CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/list.c.i
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/freertos.dir/build.make test/CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/list.c.i
 .PHONY : FreeRTOS/FreeRTOS/Source/list.c.i
 
 FreeRTOS/FreeRTOS/Source/list.s: FreeRTOS/FreeRTOS/Source/list.c.s
@@ -227,7 +227,7 @@ FreeRTOS/FreeRTOS/Source/list.s: FreeRTOS/FreeRTOS/Source/list.c.s
 
 # target to generate assembly for a file
 FreeRTOS/FreeRTOS/Source/list.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/freertos.dir/build.make CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/list.c.s
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/freertos.dir/build.make test/CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/list.c.s
 .PHONY : FreeRTOS/FreeRTOS/Source/list.c.s
 
 FreeRTOS/FreeRTOS/Source/portable/MemMang/heap_3.o: FreeRTOS/FreeRTOS/Source/portable/MemMang/heap_3.c.o
@@ -235,7 +235,7 @@ FreeRTOS/FreeRTOS/Source/portable/MemMang/heap_3.o: FreeRTOS/FreeRTOS/Source/por
 
 # target to build an object file
 FreeRTOS/FreeRTOS/Source/portable/MemMang/heap_3.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/freertos.dir/build.make CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/portable/MemMang/heap_3.c.o
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/freertos.dir/build.make test/CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/portable/MemMang/heap_3.c.o
 .PHONY : FreeRTOS/FreeRTOS/Source/portable/MemMang/heap_3.c.o
 
 FreeRTOS/FreeRTOS/Source/portable/MemMang/heap_3.i: FreeRTOS/FreeRTOS/Source/portable/MemMang/heap_3.c.i
@@ -243,7 +243,7 @@ FreeRTOS/FreeRTOS/Source/portable/MemMang/heap_3.i: FreeRTOS/FreeRTOS/Source/por
 
 # target to preprocess a source file
 FreeRTOS/FreeRTOS/Source/portable/MemMang/heap_3.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/freertos.dir/build.make CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/portable/MemMang/heap_3.c.i
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/freertos.dir/build.make test/CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/portable/MemMang/heap_3.c.i
 .PHONY : FreeRTOS/FreeRTOS/Source/portable/MemMang/heap_3.c.i
 
 FreeRTOS/FreeRTOS/Source/portable/MemMang/heap_3.s: FreeRTOS/FreeRTOS/Source/portable/MemMang/heap_3.c.s
@@ -251,7 +251,7 @@ FreeRTOS/FreeRTOS/Source/portable/MemMang/heap_3.s: FreeRTOS/FreeRTOS/Source/por
 
 # target to generate assembly for a file
 FreeRTOS/FreeRTOS/Source/portable/MemMang/heap_3.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/freertos.dir/build.make CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/portable/MemMang/heap_3.c.s
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/freertos.dir/build.make test/CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/portable/MemMang/heap_3.c.s
 .PHONY : FreeRTOS/FreeRTOS/Source/portable/MemMang/heap_3.c.s
 
 FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/port.o: FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/port.c.o
@@ -259,7 +259,7 @@ FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/port.o: FreeRTOS/FreeRTOS
 
 # target to build an object file
 FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/port.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/freertos.dir/build.make CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/port.c.o
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/freertos.dir/build.make test/CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/port.c.o
 .PHONY : FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/port.c.o
 
 FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/port.i: FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/port.c.i
@@ -267,7 +267,7 @@ FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/port.i: FreeRTOS/FreeRTOS
 
 # target to preprocess a source file
 FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/port.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/freertos.dir/build.make CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/port.c.i
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/freertos.dir/build.make test/CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/port.c.i
 .PHONY : FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/port.c.i
 
 FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/port.s: FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/port.c.s
@@ -275,7 +275,7 @@ FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/port.s: FreeRTOS/FreeRTOS
 
 # target to generate assembly for a file
 FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/port.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/freertos.dir/build.make CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/port.c.s
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/freertos.dir/build.make test/CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/port.c.s
 .PHONY : FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/port.c.s
 
 FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/utils/wait_for_event.o: FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/utils/wait_for_event.c.o
@@ -283,7 +283,7 @@ FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/utils/wait_for_event.o: F
 
 # target to build an object file
 FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/utils/wait_for_event.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/freertos.dir/build.make CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/utils/wait_for_event.c.o
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/freertos.dir/build.make test/CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/utils/wait_for_event.c.o
 .PHONY : FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/utils/wait_for_event.c.o
 
 FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/utils/wait_for_event.i: FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/utils/wait_for_event.c.i
@@ -291,7 +291,7 @@ FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/utils/wait_for_event.i: F
 
 # target to preprocess a source file
 FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/utils/wait_for_event.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/freertos.dir/build.make CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/utils/wait_for_event.c.i
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/freertos.dir/build.make test/CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/utils/wait_for_event.c.i
 .PHONY : FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/utils/wait_for_event.c.i
 
 FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/utils/wait_for_event.s: FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/utils/wait_for_event.c.s
@@ -299,7 +299,7 @@ FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/utils/wait_for_event.s: F
 
 # target to generate assembly for a file
 FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/utils/wait_for_event.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/freertos.dir/build.make CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/utils/wait_for_event.c.s
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/freertos.dir/build.make test/CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/utils/wait_for_event.c.s
 .PHONY : FreeRTOS/FreeRTOS/Source/portable/ThirdParty/GCC/Posix/utils/wait_for_event.c.s
 
 FreeRTOS/FreeRTOS/Source/queue.o: FreeRTOS/FreeRTOS/Source/queue.c.o
@@ -307,7 +307,7 @@ FreeRTOS/FreeRTOS/Source/queue.o: FreeRTOS/FreeRTOS/Source/queue.c.o
 
 # target to build an object file
 FreeRTOS/FreeRTOS/Source/queue.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/freertos.dir/build.make CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/queue.c.o
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/freertos.dir/build.make test/CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/queue.c.o
 .PHONY : FreeRTOS/FreeRTOS/Source/queue.c.o
 
 FreeRTOS/FreeRTOS/Source/queue.i: FreeRTOS/FreeRTOS/Source/queue.c.i
@@ -315,7 +315,7 @@ FreeRTOS/FreeRTOS/Source/queue.i: FreeRTOS/FreeRTOS/Source/queue.c.i
 
 # target to preprocess a source file
 FreeRTOS/FreeRTOS/Source/queue.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/freertos.dir/build.make CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/queue.c.i
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/freertos.dir/build.make test/CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/queue.c.i
 .PHONY : FreeRTOS/FreeRTOS/Source/queue.c.i
 
 FreeRTOS/FreeRTOS/Source/queue.s: FreeRTOS/FreeRTOS/Source/queue.c.s
@@ -323,7 +323,7 @@ FreeRTOS/FreeRTOS/Source/queue.s: FreeRTOS/FreeRTOS/Source/queue.c.s
 
 # target to generate assembly for a file
 FreeRTOS/FreeRTOS/Source/queue.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/freertos.dir/build.make CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/queue.c.s
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/freertos.dir/build.make test/CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/queue.c.s
 .PHONY : FreeRTOS/FreeRTOS/Source/queue.c.s
 
 FreeRTOS/FreeRTOS/Source/stream_buffer.o: FreeRTOS/FreeRTOS/Source/stream_buffer.c.o
@@ -331,7 +331,7 @@ FreeRTOS/FreeRTOS/Source/stream_buffer.o: FreeRTOS/FreeRTOS/Source/stream_buffer
 
 # target to build an object file
 FreeRTOS/FreeRTOS/Source/stream_buffer.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/freertos.dir/build.make CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/stream_buffer.c.o
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/freertos.dir/build.make test/CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/stream_buffer.c.o
 .PHONY : FreeRTOS/FreeRTOS/Source/stream_buffer.c.o
 
 FreeRTOS/FreeRTOS/Source/stream_buffer.i: FreeRTOS/FreeRTOS/Source/stream_buffer.c.i
@@ -339,7 +339,7 @@ FreeRTOS/FreeRTOS/Source/stream_buffer.i: FreeRTOS/FreeRTOS/Source/stream_buffer
 
 # target to preprocess a source file
 FreeRTOS/FreeRTOS/Source/stream_buffer.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/freertos.dir/build.make CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/stream_buffer.c.i
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/freertos.dir/build.make test/CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/stream_buffer.c.i
 .PHONY : FreeRTOS/FreeRTOS/Source/stream_buffer.c.i
 
 FreeRTOS/FreeRTOS/Source/stream_buffer.s: FreeRTOS/FreeRTOS/Source/stream_buffer.c.s
@@ -347,7 +347,7 @@ FreeRTOS/FreeRTOS/Source/stream_buffer.s: FreeRTOS/FreeRTOS/Source/stream_buffer
 
 # target to generate assembly for a file
 FreeRTOS/FreeRTOS/Source/stream_buffer.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/freertos.dir/build.make CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/stream_buffer.c.s
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/freertos.dir/build.make test/CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/stream_buffer.c.s
 .PHONY : FreeRTOS/FreeRTOS/Source/stream_buffer.c.s
 
 FreeRTOS/FreeRTOS/Source/tasks.o: FreeRTOS/FreeRTOS/Source/tasks.c.o
@@ -355,7 +355,7 @@ FreeRTOS/FreeRTOS/Source/tasks.o: FreeRTOS/FreeRTOS/Source/tasks.c.o
 
 # target to build an object file
 FreeRTOS/FreeRTOS/Source/tasks.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/freertos.dir/build.make CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/tasks.c.o
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/freertos.dir/build.make test/CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/tasks.c.o
 .PHONY : FreeRTOS/FreeRTOS/Source/tasks.c.o
 
 FreeRTOS/FreeRTOS/Source/tasks.i: FreeRTOS/FreeRTOS/Source/tasks.c.i
@@ -363,7 +363,7 @@ FreeRTOS/FreeRTOS/Source/tasks.i: FreeRTOS/FreeRTOS/Source/tasks.c.i
 
 # target to preprocess a source file
 FreeRTOS/FreeRTOS/Source/tasks.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/freertos.dir/build.make CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/tasks.c.i
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/freertos.dir/build.make test/CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/tasks.c.i
 .PHONY : FreeRTOS/FreeRTOS/Source/tasks.c.i
 
 FreeRTOS/FreeRTOS/Source/tasks.s: FreeRTOS/FreeRTOS/Source/tasks.c.s
@@ -371,7 +371,7 @@ FreeRTOS/FreeRTOS/Source/tasks.s: FreeRTOS/FreeRTOS/Source/tasks.c.s
 
 # target to generate assembly for a file
 FreeRTOS/FreeRTOS/Source/tasks.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/freertos.dir/build.make CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/tasks.c.s
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/freertos.dir/build.make test/CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/tasks.c.s
 .PHONY : FreeRTOS/FreeRTOS/Source/tasks.c.s
 
 FreeRTOS/FreeRTOS/Source/timers.o: FreeRTOS/FreeRTOS/Source/timers.c.o
@@ -379,7 +379,7 @@ FreeRTOS/FreeRTOS/Source/timers.o: FreeRTOS/FreeRTOS/Source/timers.c.o
 
 # target to build an object file
 FreeRTOS/FreeRTOS/Source/timers.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/freertos.dir/build.make CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/timers.c.o
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/freertos.dir/build.make test/CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/timers.c.o
 .PHONY : FreeRTOS/FreeRTOS/Source/timers.c.o
 
 FreeRTOS/FreeRTOS/Source/timers.i: FreeRTOS/FreeRTOS/Source/timers.c.i
@@ -387,7 +387,7 @@ FreeRTOS/FreeRTOS/Source/timers.i: FreeRTOS/FreeRTOS/Source/timers.c.i
 
 # target to preprocess a source file
 FreeRTOS/FreeRTOS/Source/timers.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/freertos.dir/build.make CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/timers.c.i
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/freertos.dir/build.make test/CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/timers.c.i
 .PHONY : FreeRTOS/FreeRTOS/Source/timers.c.i
 
 FreeRTOS/FreeRTOS/Source/timers.s: FreeRTOS/FreeRTOS/Source/timers.c.s
@@ -395,15 +395,39 @@ FreeRTOS/FreeRTOS/Source/timers.s: FreeRTOS/FreeRTOS/Source/timers.c.s
 
 # target to generate assembly for a file
 FreeRTOS/FreeRTOS/Source/timers.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/freertos.dir/build.make CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/timers.c.s
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/freertos.dir/build.make test/CMakeFiles/freertos.dir/FreeRTOS/FreeRTOS/Source/timers.c.s
 .PHONY : FreeRTOS/FreeRTOS/Source/timers.c.s
+
+__/src/eros.o: __/src/eros.c.o
+.PHONY : __/src/eros.o
+
+# target to build an object file
+__/src/eros.c.o:
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/posix_demo.dir/build.make test/CMakeFiles/posix_demo.dir/__/src/eros.c.o
+.PHONY : __/src/eros.c.o
+
+__/src/eros.i: __/src/eros.c.i
+.PHONY : __/src/eros.i
+
+# target to preprocess a source file
+__/src/eros.c.i:
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/posix_demo.dir/build.make test/CMakeFiles/posix_demo.dir/__/src/eros.c.i
+.PHONY : __/src/eros.c.i
+
+__/src/eros.s: __/src/eros.c.s
+.PHONY : __/src/eros.s
+
+# target to generate assembly for a file
+__/src/eros.c.s:
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/posix_demo.dir/build.make test/CMakeFiles/posix_demo.dir/__/src/eros.c.s
+.PHONY : __/src/eros.c.s
 
 hooks.o: hooks.c.o
 .PHONY : hooks.o
 
 # target to build an object file
 hooks.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/posix_demo.dir/build.make CMakeFiles/posix_demo.dir/hooks.c.o
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/posix_demo.dir/build.make test/CMakeFiles/posix_demo.dir/hooks.c.o
 .PHONY : hooks.c.o
 
 hooks.i: hooks.c.i
@@ -411,7 +435,7 @@ hooks.i: hooks.c.i
 
 # target to preprocess a source file
 hooks.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/posix_demo.dir/build.make CMakeFiles/posix_demo.dir/hooks.c.i
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/posix_demo.dir/build.make test/CMakeFiles/posix_demo.dir/hooks.c.i
 .PHONY : hooks.c.i
 
 hooks.s: hooks.c.s
@@ -419,7 +443,7 @@ hooks.s: hooks.c.s
 
 # target to generate assembly for a file
 hooks.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/posix_demo.dir/build.make CMakeFiles/posix_demo.dir/hooks.c.s
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/posix_demo.dir/build.make test/CMakeFiles/posix_demo.dir/hooks.c.s
 .PHONY : hooks.c.s
 
 main.o: main.c.o
@@ -427,7 +451,7 @@ main.o: main.c.o
 
 # target to build an object file
 main.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/posix_demo.dir/build.make CMakeFiles/posix_demo.dir/main.c.o
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/posix_demo.dir/build.make test/CMakeFiles/posix_demo.dir/main.c.o
 .PHONY : main.c.o
 
 main.i: main.c.i
@@ -435,7 +459,7 @@ main.i: main.c.i
 
 # target to preprocess a source file
 main.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/posix_demo.dir/build.make CMakeFiles/posix_demo.dir/main.c.i
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/posix_demo.dir/build.make test/CMakeFiles/posix_demo.dir/main.c.i
 .PHONY : main.c.i
 
 main.s: main.c.s
@@ -443,32 +467,8 @@ main.s: main.c.s
 
 # target to generate assembly for a file
 main.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/posix_demo.dir/build.make CMakeFiles/posix_demo.dir/main.c.s
+	cd /root/dev/eros && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/posix_demo.dir/build.make test/CMakeFiles/posix_demo.dir/main.c.s
 .PHONY : main.c.s
-
-root/dev/eros/src/eros.o: root/dev/eros/src/eros.c.o
-.PHONY : root/dev/eros/src/eros.o
-
-# target to build an object file
-root/dev/eros/src/eros.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/posix_demo.dir/build.make CMakeFiles/posix_demo.dir/root/dev/eros/src/eros.c.o
-.PHONY : root/dev/eros/src/eros.c.o
-
-root/dev/eros/src/eros.i: root/dev/eros/src/eros.c.i
-.PHONY : root/dev/eros/src/eros.i
-
-# target to preprocess a source file
-root/dev/eros/src/eros.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/posix_demo.dir/build.make CMakeFiles/posix_demo.dir/root/dev/eros/src/eros.c.i
-.PHONY : root/dev/eros/src/eros.c.i
-
-root/dev/eros/src/eros.s: root/dev/eros/src/eros.c.s
-.PHONY : root/dev/eros/src/eros.s
-
-# target to generate assembly for a file
-root/dev/eros/src/eros.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/posix_demo.dir/build.make CMakeFiles/posix_demo.dir/root/dev/eros/src/eros.c.s
-.PHONY : root/dev/eros/src/eros.c.s
 
 # Help Target
 help:
@@ -511,15 +511,15 @@ help:
 	@echo "... FreeRTOS/FreeRTOS/Source/timers.o"
 	@echo "... FreeRTOS/FreeRTOS/Source/timers.i"
 	@echo "... FreeRTOS/FreeRTOS/Source/timers.s"
+	@echo "... __/src/eros.o"
+	@echo "... __/src/eros.i"
+	@echo "... __/src/eros.s"
 	@echo "... hooks.o"
 	@echo "... hooks.i"
 	@echo "... hooks.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
-	@echo "... root/dev/eros/src/eros.o"
-	@echo "... root/dev/eros/src/eros.i"
-	@echo "... root/dev/eros/src/eros.s"
 .PHONY : help
 
 
@@ -531,6 +531,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	$(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /root/dev/eros && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

@@ -3,11 +3,14 @@
 
 project(posix_demo C)
 cmake_minimum_required(VERSION 3.5)
+set(CMAKE_C_COMPILER "gcc")
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/build)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # For debug, no change detected ...
-set(CMAKE_VERBOSE_MAKEFILE ON)
+#set(CMAKE_VERBOSE_MAKEFILE ON)
 
 set(FREERTOS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/FreeRTOS/FreeRTOS")
 
@@ -19,6 +22,7 @@ include_directories(
     ${FREERTOS_DIR}/Source/portable/ThirdParty/GCC/Posix/utils
     ${FREERTOS_DIR}/Demo/Common/include
     ${FREERTOS_DIR}/Demo/Posix_GCC
+
 )
 
 FILE(GLOB FREERTOS_SOURCES
@@ -35,7 +39,7 @@ list(APPEND FREERTOS_SOURCES "${FREERTOS_DIR}/Source/portable/ThirdParty/GCC/Pos
 # -> CFLAGS := -ggdb3 -O0 -DprojCOVERAGE_TEST=0 -D_WINDOWS_
 add_definitions(-DprojCOVERAGE_TEST=0)
 add_definitions(-D_WINDOWS_)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ggdb3 -O0")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ggdb3 -O0 -Wall -Wextra -Werror")
 
 # -> LDFLAGS := -ggdb3 -O0 -pthread
 # pthread included after
@@ -51,7 +55,6 @@ message("Sources: ${FREERTOS_SOURCES}")
 add_executable(${PROJECT_NAME}
     ../src/eros.c
     main.c
-    FreeRTOSConfig.h
     hooks.c
 )
 

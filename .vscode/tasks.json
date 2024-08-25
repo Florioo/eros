@@ -5,32 +5,21 @@
 			"label": "Clean",
 			"type": "shell",
 			"options": {
-				"cwd": "${workspaceFolder}/test",
+				"cwd": "${workspaceFolder}"
 			},
-			"command": "make clean",
+			"command": "make clean"
 		},
 		{
 			"label": "Run",
 			"type": "shell",
 			"options": {
-				"cwd": "${workspaceFolder}/test",
+				"cwd": "${workspaceFolder}"
 			},
 			"command": "make run",
 			"group": {
 				"kind": "build",
 				"isDefault": true
-			},
-		},
-		{
-			// Generate compile_commands.json uwing compiledb
-			"label": "CompileDB",
-			"type": "shell",
-			"options": {
-				"cwd": "${workspaceFolder}/test",
-			},
-			"command": "compiledb -n make",
-
-
+			}
 		}
 	]
 }
