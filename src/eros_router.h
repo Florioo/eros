@@ -1,6 +1,9 @@
 #include "eros_endpoint.h"
-#include "FreeRTOS.h"
-#include "queue.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/queue.h"
+
+#ifndef EROS_ROUTER_H
+#define EROS_ROUTER_H
 
 struct eros_router_t
 {
@@ -15,3 +18,5 @@ void eros_router_delete(eros_router_t *router);
 
 void eros_router_register_endpoint(eros_router_t *router, eros_endpoint_t *endpoint);
 void eros_router_route(eros_router_t *router, eros_package_t *package, TickType_t timeout);
+
+#endif // EROS_ROUTER_H

@@ -1,6 +1,6 @@
 #include "eros_package.h"
-#include "FreeRTOS.h"
-#include "queue.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/queue.h"
 
 #ifndef EROS_ENDPOINT_H
 #define EROS_ENDPOINT_H
