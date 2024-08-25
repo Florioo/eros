@@ -9,6 +9,9 @@
         "array": "c",
         "string": "c",
         "string_view": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "queue.h": "c",
+        "freertos.h": "c",
+        "eros_package.h": "c"
     },
 }
