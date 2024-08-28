@@ -78,7 +78,8 @@ void eros_router_route(eros_router_t *router, eros_package_t *package, TickType_
         {
             if (eros_endpoint_send(router->endpoints[i], package, timeout))
             {
-                printf("Failed to send package to endpoint %d\n", router->endpoints[i]->id.id);
+                // Do not print here because it will cause a infinite recursion
+                // printf("Failed to send package to endpoint %d\n", router->endpoints[i]->id.id);
             }
         }
     }
