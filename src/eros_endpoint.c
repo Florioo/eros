@@ -232,23 +232,23 @@ int eros_endpoint_send(eros_endpoint_t *endpoint, eros_package_t *package, TickT
     switch (endpoint->type)
     {
     case EROS_ENDPOINT_BUFFERED:
-        package->reference_count++;
+        eros_package_increase_reference(package);
 
         ret = xQueueSend(endpoint->endpoint.buffered_endpoint.queue, &package, timeout);
         if (ret != pdPASS)
         {
-            package->reference_count--;
+            eros_package_decrease_reference(package);
             return -1;
         }
         return 0;
 
     case EROS_BUFFERED_GATEWAY:
-        package->reference_count++;
+        eros_package_increase_reference(package);
 
         ret = xQueueSend(endpoint->endpoint.buffered_gateway_endpoint.queue, &package, timeout);
         if (ret != pdPASS)
         {
-            package->reference_count--;
+            eros_package_decrease_reference(package);
             return -1;
         }
 
@@ -260,8 +260,32 @@ int eros_endpoint_send(eros_endpoint_t *endpoint, eros_package_t *package, TickT
     case EROS_UNBUFFERED_GATEWAY:
         endpoint->endpoint.unbuffered_gateway_endpoint.callback(endpoint, package);
         return 0;
+    
+    case EROS_ENDPOINT_WORKER:
+        endpoint->endpoint.worker_endpoint.worker_callback(endpoint, package);
+        return 0;
 
     default:
         return -1;
+    }
+}
+
+void eros_endpoint_set_callback(eros_endpoint_t *endpoint, eros_package_callback_t callback)
+{
+    assert(endpoint);
+    assert(callback);
+    switch (endpoint->type)
+    {
+    case EROS_ENDPOINT_UNBUFFERED:
+        endpoint->endpoint.unbuffered_endpoint.callback = callback;
+        break;
+    case EROS_UNBUFFERED_GATEWAY:
+        endpoint->endpoint.unbuffered_gateway_endpoint.callback = callback;
+        break;
+    case EROS_ENDPOINT_WORKER:
+        endpoint->endpoint.worker_endpoint.callback = callback;
+        break;
+    default:
+        break;
     }
 }

@@ -25,14 +25,23 @@ eros_package_t *eros_package_new(uint8_t *data, size_t size)
     package->reference_count = 1;
     return package;
 }
+void eros_package_increase_reference(eros_package_t *package)
+{
+    package->reference_count++;
+}
 
-void eros_package_delete(eros_package_t *package)
+void eros_package_decrease_reference(eros_package_t *package)
 {
     if (package->reference_count > 0)
     {
         package->reference_count--;
     }
+}
 
+void eros_package_delete(eros_package_t *package)
+{
+    eros_package_decrease_reference(package);
+    
     if (package->reference_count == 0)
     {
         free(package->data);

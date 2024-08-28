@@ -39,5 +39,7 @@ typedef struct
 
 eros_package_t *eros_package_new(uint8_t *data, size_t size);
 void eros_package_delete(eros_package_t *package);
+void eros_package_decrease_reference(eros_package_t *package);
+void eros_package_increase_reference(eros_package_t *package);
 
 #endif // EROS_PACKAGE_H
