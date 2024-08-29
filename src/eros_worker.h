@@ -16,7 +16,6 @@ typedef struct
 {
     eros_endpoint_t *endpoint;
     eros_package_t *package;
-    eros_package_callback_t callback;
 } eros_worker_task_t;
 
 eros_worker_t *eros_worker_new(int queue_size);

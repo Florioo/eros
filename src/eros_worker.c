@@ -40,7 +40,6 @@ void eros_worker_callback(eros_endpoint_t *endpoint, eros_package_t *package)
     eros_worker_task_t task = {
         .package = package,
         .endpoint = endpoint,
-        .callback = endpoint->endpoint.worker_endpoint.callback,
     };
 
     xQueueSend(worker->data_queue, &task, 0);
@@ -54,10 +53,10 @@ void eros_worker_task(void *arg)
     while (1)
     {
         xQueueReceive(worker->data_queue, &task, portMAX_DELAY);
-     
-        if (task.callback)
+
+        if (task.endpoint->endpoint.worker_endpoint.callback)
         {
-            task.callback(task.endpoint, task.package);
+            task.endpoint->endpoint.worker_endpoint.callback(task.endpoint, task.package);
         }
 
         eros_package_delete(task.package);
@@ -67,6 +66,7 @@ void eros_worker_task(void *arg)
 eros_endpoint_t *eros_worker_endpoint_new(int id, eros_router_t *router, eros_worker_t *worker, eros_package_callback_t callback)
 {
     assert(router);
+    assert(worker);
 
     eros_endpoint_t endpoint = {
         .id = {
