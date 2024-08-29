@@ -6,7 +6,7 @@
 #ifndef EROS_WORKER_H
 #define EROS_WORKER_H
 
-typedef struct eros_worker_t
+struct eros_worker_t
 {
     QueueHandle_t data_queue;
     TaskHandle_t task;

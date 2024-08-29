@@ -22,7 +22,7 @@ eros_worker_t *eros_worker_new(int queue_size)
     memcpy(worker_ptr, &worker, sizeof(eros_worker_t));
 
     // Create task
-    xTaskCreate(eros_worker_task, "eros_worker_task", 4096, worker_ptr, 5, &worker_ptr->task);
+    xTaskCreate(eros_worker_task, "eros_worker_task", 3000, worker_ptr, 5, &worker_ptr->task);
 
     return worker_ptr;
 }
