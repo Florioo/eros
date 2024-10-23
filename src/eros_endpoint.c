@@ -255,15 +255,24 @@ int eros_endpoint_send(eros_endpoint_t *endpoint, eros_package_t *package, TickT
         return 0;
 
     case EROS_ENDPOINT_UNBUFFERED:
-        endpoint->endpoint.unbuffered_endpoint.callback(endpoint, package);
-        return 0;
+        if (endpoint->endpoint.unbuffered_endpoint.callback)
+        {
+            endpoint->endpoint.unbuffered_endpoint.callback(endpoint, package);
+            return 0;
+        }
     case EROS_UNBUFFERED_GATEWAY:
-        endpoint->endpoint.unbuffered_gateway_endpoint.callback(endpoint, package);
-        return 0;
-    
+        if (endpoint->endpoint.unbuffered_gateway_endpoint.callback)
+        {
+            endpoint->endpoint.unbuffered_gateway_endpoint.callback(endpoint, package);
+            return 0;
+        }
+
     case EROS_ENDPOINT_WORKER:
-        endpoint->endpoint.worker_endpoint.worker_callback(endpoint, package);
-        return 0;
+        if (endpoint->endpoint.worker_endpoint.worker_callback)
+        {
+            endpoint->endpoint.worker_endpoint.worker_callback(endpoint, package);
+            return 0;
+        }
 
     default:
         return -1;
@@ -273,7 +282,6 @@ int eros_endpoint_send(eros_endpoint_t *endpoint, eros_package_t *package, TickT
 void eros_endpoint_set_callback(eros_endpoint_t *endpoint, eros_package_callback_t callback)
 {
     assert(endpoint);
-    assert(callback);
     switch (endpoint->type)
     {
     case EROS_ENDPOINT_UNBUFFERED:
