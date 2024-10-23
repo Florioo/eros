@@ -260,12 +260,14 @@ int eros_endpoint_send(eros_endpoint_t *endpoint, eros_package_t *package, TickT
             endpoint->endpoint.unbuffered_endpoint.callback(endpoint, package);
             return 0;
         }
+        return -1;
     case EROS_UNBUFFERED_GATEWAY:
         if (endpoint->endpoint.unbuffered_gateway_endpoint.callback)
         {
             endpoint->endpoint.unbuffered_gateway_endpoint.callback(endpoint, package);
             return 0;
         }
+        return -1;
 
     case EROS_ENDPOINT_WORKER:
         if (endpoint->endpoint.worker_endpoint.worker_callback)
@@ -273,6 +275,7 @@ int eros_endpoint_send(eros_endpoint_t *endpoint, eros_package_t *package, TickT
             endpoint->endpoint.worker_endpoint.worker_callback(endpoint, package);
             return 0;
         }
+        return -1;
 
     default:
         return -1;
