@@ -85,7 +85,7 @@ eros_endpoint_t *eros_buffered_gateway_endpoint_new(int id, eros_router_t *route
             .id = id,
             .realm_id = router->realm_id,
         },
-        .type = EROS_BUFFERED_GATEWAY,
+        .type = EROS_GATEWAY_BUFFERED,
         .endpoint.buffered_gateway_endpoint = {
             .queue = queue,
             .remote_realm_id = remote_realm_id,
@@ -148,7 +148,7 @@ void eros_endpoint_delete(eros_endpoint_t *endpoint)
             vQueueDelete(endpoint->endpoint.buffered_endpoint.queue);
         }
         break;
-    case EROS_BUFFERED_GATEWAY:
+    case EROS_GATEWAY_BUFFERED:
         if (endpoint->endpoint.buffered_gateway_endpoint.queue != NULL)
         {
             vQueueDelete(endpoint->endpoint.buffered_gateway_endpoint.queue);
@@ -215,7 +215,7 @@ eros_package_t *eros_buffered_endpoint_receive(eros_endpoint_t *endpoint, TickTy
 eros_package_t *eros_buffered_gateway_endpoint_receive(eros_endpoint_t *endpoint, TickType_t timeout)
 {
     assert(endpoint);
-    assert(endpoint->type == EROS_BUFFERED_GATEWAY);
+    assert(endpoint->type == EROS_GATEWAY_BUFFERED);
 
     eros_package_t *package = NULL;
     xQueueReceive(endpoint->endpoint.buffered_gateway_endpoint.queue, &package, timeout);
@@ -242,7 +242,7 @@ int eros_endpoint_send(eros_endpoint_t *endpoint, eros_package_t *package, TickT
         }
         return 0;
 
-    case EROS_BUFFERED_GATEWAY:
+    case EROS_GATEWAY_BUFFERED:
         eros_package_increase_reference(package);
 
         ret = xQueueSend(endpoint->endpoint.buffered_gateway_endpoint.queue, &package, timeout);
