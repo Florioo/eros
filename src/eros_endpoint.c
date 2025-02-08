@@ -71,10 +71,9 @@ eros_unbuffered_endpoint_new(int id, eros_router_t *router,
   return endpoint_ptr;
 }
 
-eros_endpoint_t *
-eros_buffered_gateway_endpoint_new(int id, eros_router_t *router,
-                                   int queue_size,
-                                   eros_realm_id_t remote_realm_id) {
+eros_endpoint_t *eros_buffered_gateway_endpoint_new(
+    int id, eros_router_t *router, int queue_size,
+    eros_realm_id_t remote_realm_id) {
   assert(router);
 
   QueueHandle_t queue = xQueueCreate(queue_size, sizeof(eros_package_t *));
@@ -94,6 +93,7 @@ eros_buffered_gateway_endpoint_new(int id, eros_router_t *router,
           {
               .queue = queue,
               .remote_realm_id = remote_realm_id,
+              .gateway_mode = EROS_GATEWAY_MODE_PROMISCUOUS,
           },
       .router = router,
   };
@@ -144,19 +144,29 @@ eros_unbuffered_gateway_endpoint_new(int id, eros_router_t *router,
 void eros_gateway_set_fixed_id_mode(eros_endpoint_t *endpoint,
                                     eros_id_t target) {
   assert(endpoint);
-  assert(endpoint->type == EROS_UNBUFFERED_GATEWAY);
-  endpoint->endpoint.unbuffered_gateway_endpoint.gateway_mode =
-      EROS_GATEWAY_MODE_FIXED_ID;
-  endpoint->endpoint.unbuffered_gateway_endpoint.fixed_target = target;
+  if (endpoint->type == EROS_UNBUFFERED_GATEWAY) {
+    endpoint->endpoint.unbuffered_gateway_endpoint.gateway_mode =
+        EROS_GATEWAY_MODE_FIXED_ID;
+    endpoint->endpoint.unbuffered_gateway_endpoint.fixed_target = target;
+  } else {
+    endpoint->endpoint.buffered_gateway_endpoint.gateway_mode =
+        EROS_GATEWAY_MODE_FIXED_ID;
+    endpoint->endpoint.buffered_gateway_endpoint.fixed_target = target;
+  }
 }
 
 void eros_gateway_set_fixed_target_group_mode(eros_endpoint_t *endpoint,
-                                       eros_group_t group) {
+                                              eros_group_t group) {
   assert(endpoint);
-  assert(endpoint->type == EROS_UNBUFFERED_GATEWAY);
-  endpoint->endpoint.unbuffered_gateway_endpoint.gateway_mode =
-      EROS_GATEWAY_MODE_FIXED_GROUP;
-  endpoint->endpoint.unbuffered_gateway_endpoint.fixed_group = group;
+  if (endpoint->type == EROS_UNBUFFERED_GATEWAY) {
+    endpoint->endpoint.unbuffered_gateway_endpoint.gateway_mode =
+        EROS_GATEWAY_MODE_FIXED_GROUP;
+    endpoint->endpoint.unbuffered_gateway_endpoint.fixed_group = group;
+  } else {
+    endpoint->endpoint.buffered_gateway_endpoint.gateway_mode =
+        EROS_GATEWAY_MODE_FIXED_GROUP;
+    endpoint->endpoint.buffered_gateway_endpoint.fixed_group = group;
+  }
 }
 
 void eros_endpoint_delete(eros_endpoint_t *endpoint) {
@@ -182,10 +192,13 @@ void eros_endpoint_delete(eros_endpoint_t *endpoint) {
   free(endpoint);
 }
 
-bool eros_endpoint_gateway_is_gateway(eros_endpoint_t *endpoint) {
+eros_gateway_mode_enum_t  eros_endpoint_gateway_get_mode(eros_endpoint_t *endpoint) {
   assert(endpoint);
-  assert(endpoint->type == EROS_UNBUFFERED_GATEWAY);
-  return endpoint->endpoint.unbuffered_gateway_endpoint.gateway_mode == EROS_GATEWAY_MODE_PROMISCUOUS;
+  if (endpoint->type == EROS_UNBUFFERED_GATEWAY) {
+    return endpoint->endpoint.unbuffered_gateway_endpoint.gateway_mode;
+  } else {
+    return endpoint->endpoint.buffered_gateway_endpoint.gateway_mode;
+  }
 }
 
 void eros_endpoint_subscribe_group(eros_endpoint_t *endpoint,
@@ -237,6 +250,9 @@ int eros_endpoint_publish_headered_data(eros_endpoint_t *endpoint,
   if (package == NULL) {
     return -1;
   }
+  // printf("Received package realm_id: %d, id: %d size: %d\n",
+  //        package->target.destination.realm_id, package->target.destination.id,
+  //        package->size);
 
   package->source = endpoint->id;
 
@@ -247,14 +263,13 @@ int eros_endpoint_publish_headered_data(eros_endpoint_t *endpoint,
 
 int eros_endpoint_gateway_ingest(eros_endpoint_t *endpoint, uint8_t *data,
                                  size_t size, TickType_t timeout) {
-  assert(endpoint->type == EROS_UNBUFFERED_GATEWAY);
 
-  if (endpoint->endpoint.unbuffered_gateway_endpoint.gateway_mode ==
-      EROS_GATEWAY_MODE_PROMISCUOUS) {
+  eros_gateway_mode_enum_t mode = eros_endpoint_gateway_get_mode(endpoint);
+
+  if (mode == EROS_GATEWAY_MODE_PROMISCUOUS) {
     return eros_endpoint_publish_headered_data(endpoint, data, size, timeout);
 
-  } else if (endpoint->endpoint.unbuffered_gateway_endpoint.gateway_mode ==
-             EROS_GATEWAY_MODE_FIXED_GROUP) {
+  } else if (mode == EROS_GATEWAY_MODE_FIXED_GROUP) {
     return eros_endpoint_publish_data(
         endpoint, endpoint->endpoint.unbuffered_gateway_endpoint.fixed_group,
         data, size, timeout);
@@ -283,6 +298,10 @@ eros_buffered_gateway_endpoint_receive(eros_endpoint_t *endpoint,
   eros_package_t *package = NULL;
   xQueueReceive(endpoint->endpoint.buffered_gateway_endpoint.queue, &package,
                 timeout);
+
+  // Add header
+  eros_package_write_header(package);
+
   return package;
 }
 
@@ -323,6 +342,7 @@ int eros_endpoint_send(eros_endpoint_t *endpoint, eros_package_t *package,
       return 0;
     }
     return -1;
+
   case EROS_UNBUFFERED_GATEWAY:
     if (endpoint->endpoint.unbuffered_gateway_endpoint.callback) {
 
@@ -361,7 +381,8 @@ void eros_endpoint_set_callback(eros_endpoint_t *endpoint,
     endpoint->endpoint.unbuffered_endpoint.callback = callback;
     break;
   case EROS_UNBUFFERED_GATEWAY:
-    endpoint->endpoint.unbuffered_gateway_endpoint.callback = callback;
+    endpoint->endpoint.unbuffered_gateway_endpoint.callback =
+        (eros_data_callback_t)(void *)callback;
     break;
   case EROS_ENDPOINT_WORKER:
     endpoint->endpoint.worker_endpoint.callback = callback;

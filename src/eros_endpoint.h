@@ -42,6 +42,9 @@ typedef struct {
 typedef struct {
   eros_realm_id_t remote_realm_id;
   QueueHandle_t queue;
+  eros_gateway_mode_enum_t gateway_mode;
+  eros_id_t fixed_target;
+  eros_group_t fixed_group;
 } eros_buffered_gateway_endpoint_t;
 
 typedef struct {
@@ -86,7 +89,8 @@ eros_endpoint_t *
 eros_unbuffered_gateway_endpoint_new(int id, eros_router_t *router,
                                      eros_realm_id_t remote_realm_id,
                                      eros_data_callback_t callback);
-bool eros_endpoint_gateway_is_gateway(eros_endpoint_t *endpoint);
+
+eros_gateway_mode_enum_t  eros_endpoint_gateway_get_mode(eros_endpoint_t *endpoint);
 int eros_endpoint_gateway_ingest(eros_endpoint_t *endpoint, uint8_t *data,
                                  size_t size, TickType_t timeout);
 
@@ -94,7 +98,7 @@ void eros_gateway_set_fixed_id_mode(eros_endpoint_t *endpoint,
                                     eros_id_t target);
 
 void eros_gateway_set_fixed_target_group_mode(eros_endpoint_t *endpoint,
-                                       eros_group_t group);
+                                              eros_group_t group);
 void eros_endpoint_delete(eros_endpoint_t *endpoint);
 void eros_endpoint_set_callback(eros_endpoint_t *endpoint,
                                 eros_package_callback_t callback);
