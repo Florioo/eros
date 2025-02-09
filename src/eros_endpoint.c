@@ -7,6 +7,15 @@
 #include <stdlib.h>
 #include <string.h>
 
+void eros_print_packag_debug(const char *tag, eros_package_t *package)
+{
+  printf("%s: Received package src(realm: %d, id: %d) -> dest(realm: %d, id: %d) "
+         "seq: %d size: %d\n",
+         tag, package->source.realm_id, package->source.id,
+         package->target.destination.realm_id, package->target.destination.id,
+         package->sequence_number, package->size);
+}
+
 eros_endpoint_t *eros_buffered_endpoint_new(int id, eros_router_t *router,
                                             int queue_size)
 {
@@ -250,13 +259,7 @@ int eros_endpoint_send_data(eros_endpoint_t *endpoint, eros_id_t destination,
   package->type = EROS_PACKAGE_TYPE_ID;
   package->target.destination = destination;
 
-#if 0
-  printf("Sending package src(realm: %d, id: %d) -> dest(realm: %d, id: %d) "
-         "size: %d\n",
-         package->source.realm_id, package->source.id,
-         package->target.destination.realm_id, package->target.destination.id,
-         package->size);
-#endif
+  eros_print_packag_debug("TX", package);
 
   // Route the package to the router
   eros_router_route(endpoint->router, package, timeout);
@@ -278,14 +281,8 @@ int eros_endpoint_send_data_with_seq(eros_endpoint_t *endpoint, eros_id_t destin
   package->type = EROS_PACKAGE_TYPE_ID;
   package->target.destination = destination;
   package->sequence_number = sequence;
-  
-#if 0
-  printf("Sending package src(realm: %d, id: %d) -> dest(realm: %d, id: %d) "
-         "size: %d\n",
-         package->source.realm_id, package->source.id,
-         package->target.destination.realm_id, package->target.destination.id,
-         package->size);
-#endif
+
+  eros_print_packag_debug("TX", package);
 
   // Route the package to the router
   eros_router_route(endpoint->router, package, timeout);
@@ -325,17 +322,7 @@ int eros_endpoint_publish_headered_data(eros_endpoint_t *endpoint,
     return -1;
   }
 
-  package->source.realm_id = endpoint->id.realm_id;
-
-#if 0
-
-  printf("Received package src(realm: %d, id: %d) -> dest(realm: %d, id: %d) "
-         "size: %d\n",
-         package->source.realm_id, package->source.id,
-         package->target.destination.realm_id, package->target.destination.id,
-         package->size);
-
-#endif
+  eros_print_packag_debug("RX", package);
 
   eros_router_route(endpoint->router, package, timeout);
   eros_package_delete(package);
