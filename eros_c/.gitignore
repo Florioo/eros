@@ -1,0 +1,7 @@
+**.a
+**.cmake
+**/CMakeFiles
+**/CMakeCache.txt
+**/Makefile
+compile_commands.json
+**/build/
