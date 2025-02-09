@@ -10,6 +10,7 @@ class WebsocketInterface(PacketTransport):
     receive_task_handle: asyncio.Task | None = None
 
     REALM = 5
+
     def __init__(self, uri: str, debug=False):
         self.uri = uri
         self.debug = debug
@@ -36,13 +37,13 @@ class WebsocketInterface(PacketTransport):
         for datagram in data:
             await self.websocket.send(datagram, text=False)  # type: ignore
             if self.debug:
-                print(f"{time.time()*1000:8.3f}: TX {datagram}")
+                print(f"{time.time() * 1000:8.3f}: TX {datagram}")
 
     async def receive(self) -> List[bytes]:
         assert self.websocket is not None, "Websocket not connected"
         result = await self.websocket.recv()  # type: ignore
         if self.debug:
-            print(f"{time.time()*1000:8.3f}: RX {result}")
+            print(f"{time.time() * 1000:8.3f}: RX {result}")
         return [result]
 
     async def __aenter__(self):

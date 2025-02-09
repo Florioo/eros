@@ -35,7 +35,7 @@ class UDPInterface(PacketTransport):
     def __init__(self, uri: str, debug: bool = False):
         """
         Initialize the UDP transport interface.
-        
+
         Args:
             uri (str): A URI string of the form "udp://host:port".
             debug (bool): Enable debug output if True.
@@ -62,8 +62,7 @@ class UDPInterface(PacketTransport):
         loop = asyncio.get_running_loop()
         self.protocol = UDPClientProtocol(self.recv_queue)
         self.transport, _ = await loop.create_datagram_endpoint(
-            lambda: self.protocol,
-            remote_addr=self.remote_addr
+            lambda: self.protocol, remote_addr=self.remote_addr
         )
         if self.debug:
             print(f"Connected to UDP {self.remote_addr}")
@@ -82,7 +81,7 @@ class UDPInterface(PacketTransport):
     async def send(self, data: List[bytes] | bytes):
         """
         Send one or more UDP datagrams.
-        
+
         Args:
             data (bytes or List[bytes]): The datagram(s) to send.
         """
@@ -95,7 +94,7 @@ class UDPInterface(PacketTransport):
         for datagram in data:
             self.transport.sendto(datagram)
             if self.debug:
-                print(f"{time.time()*1000:8.3f}: TX {datagram}")
+                print(f"{time.time() * 1000:8.3f}: TX {datagram}")
 
     async def receive(self) -> List[bytes]:
         """
@@ -105,7 +104,7 @@ class UDPInterface(PacketTransport):
             raise Exception("UDP not connected")
         data = await self.recv_queue.get()
         if self.debug:
-            print(f"{time.time()*1000:8.3f}: RX {data}")
+            print(f"{time.time() * 1000:8.3f}: RX {data}")
         return [data]
 
     async def __aenter__(self):

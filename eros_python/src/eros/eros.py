@@ -73,12 +73,13 @@ class ErosInterface:
         self.interface = transport
         self.debug = debug
         self.endpoints = {}
+        self.start()
 
-    async def start(self):
+    def start(self):
         assert self.routing_task_handle is None, "Routing task already running"
         self.routing_task_handle = asyncio.create_task(self.routing_task())
 
-    async def stop(self):
+    def stop(self):
         if self.routing_task_handle is not None:
             self.routing_task_handle.cancel()
             self.routing_task_handle = None
@@ -145,6 +146,7 @@ class ErosEndpoint(PacketTransport):
         if self.sequence > 15:
             self.sequence = 0
         return self.sequence
+
     async def receive(self) -> List[bytes]:
         return [await self.queue.get()]
 
@@ -153,7 +155,6 @@ class ErosEndpoint(PacketTransport):
             data = [data]
 
         for _data in data:
-
             message = ErosMessage(
                 target=self.target,
                 data=_data,
@@ -163,9 +164,7 @@ class ErosEndpoint(PacketTransport):
 
             await self.eros.send(message)
 
-    async def send_and_receive(
-        self, data: bytes
-    ) -> bytes:
+    async def send_and_receive(self, data: bytes) -> bytes:
         # Create message
         message = ErosMessage(
             target=self.target,
@@ -175,9 +174,9 @@ class ErosEndpoint(PacketTransport):
         )
 
         # Set future to wait for response
-        future = asyncio.get_event_loop().create_future()        
+        future = asyncio.get_event_loop().create_future()
         self.pending_messages[message.sequence] = future
-        
+
         # Send message
         await self.eros.send(message)
 

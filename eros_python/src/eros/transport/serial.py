@@ -1,7 +1,6 @@
 from aioserial import AioSerial
 
 from .transport import StreamTransport
-from .transport import StreamTransport
 
 
 class SerialInterface(StreamTransport):
