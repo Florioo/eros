@@ -44,9 +44,7 @@ class ErosMessage(BaseModel):
         if len(data) < 1:
             return None
 
-        target_id, target_realm, source_realm, source_id, _, sequence = (
-            bitstruct.unpack("u4u4u4u4u4u4", data[:3])
-        )
+        target_id, target_realm, source_realm, source_id, _, sequence = bitstruct.unpack("u4u4u4u4u4u4", data[:3])
         assert isinstance(target_id, int)
         assert isinstance(target_realm, int)
         assert isinstance(source_id, int)

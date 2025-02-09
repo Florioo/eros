@@ -61,9 +61,7 @@ class UDPInterface(PacketTransport):
         self.recv_queue = asyncio.Queue()
         loop = asyncio.get_running_loop()
         self.protocol = UDPClientProtocol(self.recv_queue)
-        self.transport, _ = await loop.create_datagram_endpoint(
-            lambda: self.protocol, remote_addr=self.remote_addr
-        )
+        self.transport, _ = await loop.create_datagram_endpoint(lambda: self.protocol, remote_addr=self.remote_addr)
         if self.debug:
             print(f"Connected to UDP {self.remote_addr}")
 

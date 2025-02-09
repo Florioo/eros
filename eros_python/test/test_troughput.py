@@ -6,9 +6,7 @@ from eros import ErosEndpoint, ErosInterface, ErosTarget
 import time
 
 
-async def perform_latency_test(
-    endpoint: ErosEndpoint, payload: bytes = b"test"
-) -> None:
+async def perform_latency_test(endpoint: ErosEndpoint, payload: bytes = b"test") -> None:
     start_time = time.time()
     result = await endpoint.send_and_receive(payload)
     end_time = time.time()
