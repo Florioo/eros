@@ -2,4 +2,3 @@
 #include "eros_router.h"
 #include "eros_endpoint.h"
 #include "eros_worker.h"
-#include "eros_packing.h"

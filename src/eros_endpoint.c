@@ -71,9 +71,10 @@ eros_unbuffered_endpoint_new(int id, eros_router_t *router,
   return endpoint_ptr;
 }
 
-eros_endpoint_t *eros_buffered_gateway_endpoint_new(
-    int id, eros_router_t *router, int queue_size,
-    eros_realm_id_t remote_realm_id) {
+eros_endpoint_t *
+eros_buffered_gateway_endpoint_new(int id, eros_router_t *router,
+                                   int queue_size,
+                                   eros_realm_id_t remote_realm_id) {
   assert(router);
 
   QueueHandle_t queue = xQueueCreate(queue_size, sizeof(eros_package_t *));
@@ -81,12 +82,13 @@ eros_endpoint_t *eros_buffered_gateway_endpoint_new(
   if (queue == NULL) {
     return NULL;
   }
+  // TODO: remove double remote realm id
 
   eros_endpoint_t endpoint = {
       .id =
           {
               .id = id,
-              .realm_id = router->realm_id,
+              .realm_id = remote_realm_id,
           },
       .type = EROS_GATEWAY_BUFFERED,
       .endpoint.buffered_gateway_endpoint =
@@ -119,7 +121,7 @@ eros_unbuffered_gateway_endpoint_new(int id, eros_router_t *router,
       .id =
           {
               .id = id,
-              .realm_id = router->realm_id,
+              .realm_id = remote_realm_id,
           },
       .type = EROS_UNBUFFERED_GATEWAY,
       .endpoint.unbuffered_gateway_endpoint =
@@ -192,7 +194,8 @@ void eros_endpoint_delete(eros_endpoint_t *endpoint) {
   free(endpoint);
 }
 
-eros_gateway_mode_enum_t  eros_endpoint_gateway_get_mode(eros_endpoint_t *endpoint) {
+eros_gateway_mode_enum_t
+eros_endpoint_gateway_get_mode(eros_endpoint_t *endpoint) {
   assert(endpoint);
   if (endpoint->type == EROS_UNBUFFERED_GATEWAY) {
     return endpoint->endpoint.unbuffered_gateway_endpoint.gateway_mode;
@@ -216,6 +219,14 @@ int eros_endpoint_send_data(eros_endpoint_t *endpoint, eros_id_t destination,
   package->source = endpoint->id;
   package->type = EROS_PACKAGE_TYPE_ID;
   package->target.destination = destination;
+
+#if 0
+  printf("Sending package src(realm: %d, id: %d) -> dest(realm: %d, id: %d) "
+         "size: %d\n",
+         package->source.realm_id, package->source.id,
+         package->target.destination.realm_id, package->target.destination.id,
+         package->size);
+#endif
 
   // Route the package to the router
   eros_router_route(endpoint->router, package, timeout);
@@ -250,11 +261,18 @@ int eros_endpoint_publish_headered_data(eros_endpoint_t *endpoint,
   if (package == NULL) {
     return -1;
   }
-  // printf("Received package realm_id: %d, id: %d size: %d\n",
-  //        package->target.destination.realm_id, package->target.destination.id,
-  //        package->size);
 
-  package->source = endpoint->id;
+  package->source.realm_id = endpoint->id.realm_id;
+
+#if 0
+
+  printf("Received package src(realm: %d, id: %d) -> dest(realm: %d, id: %d) "
+         "size: %d\n",
+         package->source.realm_id, package->source.id,
+         package->target.destination.realm_id, package->target.destination.id,
+         package->size);
+
+#endif
 
   eros_router_route(endpoint->router, package, timeout);
   eros_package_delete(package);
@@ -346,13 +364,16 @@ int eros_endpoint_send(eros_endpoint_t *endpoint, eros_package_t *package,
   case EROS_UNBUFFERED_GATEWAY:
     if (endpoint->endpoint.unbuffered_gateway_endpoint.callback) {
 
-      if (endpoint->endpoint.unbuffered_gateway_endpoint.gateway_mode) {
+      if (endpoint->endpoint.unbuffered_gateway_endpoint.gateway_mode ==
+          EROS_GATEWAY_MODE_PROMISCUOUS) {
+        // Add header data
         eros_package_write_header(package);
-
         endpoint->endpoint.unbuffered_gateway_endpoint.callback(
             endpoint, package->data - sizeof(eros_header_t),
             package->size + sizeof(eros_header_t));
       } else {
+
+        // Do not add header data
         endpoint->endpoint.unbuffered_gateway_endpoint.callback(
             endpoint, package->data, package->size);
       }

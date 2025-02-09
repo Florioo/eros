@@ -90,7 +90,8 @@ eros_unbuffered_gateway_endpoint_new(int id, eros_router_t *router,
                                      eros_realm_id_t remote_realm_id,
                                      eros_data_callback_t callback);
 
-eros_gateway_mode_enum_t  eros_endpoint_gateway_get_mode(eros_endpoint_t *endpoint);
+eros_gateway_mode_enum_t
+eros_endpoint_gateway_get_mode(eros_endpoint_t *endpoint);
 int eros_endpoint_gateway_ingest(eros_endpoint_t *endpoint, uint8_t *data,
                                  size_t size, TickType_t timeout);
 

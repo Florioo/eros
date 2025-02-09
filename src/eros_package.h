@@ -9,6 +9,12 @@ typedef uint8_t eros_id_type_t;
 typedef uint8_t eros_group_t;
 
 typedef struct {
+  uint8_t target_realm : 4;
+  uint8_t target_id : 4;
+  uint8_t source_id : 4;
+} eros_header_t;
+
+typedef struct {
   eros_id_type_t id;
   eros_realm_id_t realm_id;
 } eros_id_t;
@@ -21,7 +27,7 @@ typedef enum {
 typedef struct {
   eros_package_type_t type;
 
-  eros_id_t source;
+  eros_id_t   source;
 
   union {
     eros_id_t destination;
