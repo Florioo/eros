@@ -9,6 +9,7 @@ class WebsocketInterface(PacketTransport):
     websocket: websockets.ClientConnection | None = None
     receive_task_handle: asyncio.Task | None = None
 
+    REALM = 5
     def __init__(self, uri: str, debug=False):
         self.uri = uri
         self.debug = debug
