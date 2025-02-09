@@ -9,11 +9,13 @@
 
 void eros_print_packag_debug(const char *tag, eros_package_t *package)
 {
-  printf("%s: Received package src(realm: %d, id: %d) -> dest(realm: %d, id: %d) "
+  #if 0
+  printf("%s: src(realm: %d, id: %d) -> dest(realm: %d, id: %d) "
          "seq: %d size: %d\n",
          tag, package->source.realm_id, package->source.id,
          package->target.destination.realm_id, package->target.destination.id,
          package->sequence_number, package->size);
+  #endif
 }
 
 eros_endpoint_t *eros_buffered_endpoint_new(int id, eros_router_t *router,
