@@ -3,6 +3,8 @@ from typing import List
 
 
 class PacketTransport(ABC):
+    REALM: int
+
     @abstractmethod
     async def send(self, data: List[bytes] | bytes): ...
     @abstractmethod
