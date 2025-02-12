@@ -127,7 +127,7 @@ class ErosEndpoint(PacketTransport):
         self.eros = eros
         self.source = source
         self.target = target
-
+        self.unexpected_message_callback = None
         self.pending_messages = {}
         self.sequence = 0
         self.eros.add_endpoint(source=self.source, endpoint=self)
@@ -137,8 +137,11 @@ class ErosEndpoint(PacketTransport):
             future = self.pending_messages.pop(data.sequence)
             future.set_result(data.data)
         else:
-            print(f"Received unexpected message: {data}")
-
+            # Decode message
+            if self.unexpected_message_callback is not None:
+                self.unexpected_message_callback(data.data)
+        
+            
     def get_sequence(self):
         self.sequence += 1
         if self.sequence > 15:
