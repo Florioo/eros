@@ -3,7 +3,7 @@ from typing import List
 import asyncio
 import time
 import urllib.parse
-
+from ..common.resolve_address import resolve_address
 
 class UDPClientProtocol(asyncio.DatagramProtocol):
     def __init__(self, queue: asyncio.Queue):
@@ -40,7 +40,7 @@ class UDPInterface(PacketTransport):
             uri (str): A URI string of the form "udp://host:port".
             debug (bool): Enable debug output if True.
         """
-        self.uri = uri
+        self.uri = resolve_address(uri)
         self.debug = debug
 
         # Parse the URI to extract the host and port.

@@ -3,6 +3,7 @@ from typing import List
 import asyncio
 import websockets
 import time
+from ..common.resolve_address import resolve_address
 
 
 class WebsocketInterface(PacketTransport):
@@ -12,13 +13,13 @@ class WebsocketInterface(PacketTransport):
     REALM = 5
 
     def __init__(self, uri: str, debug=False):
-        self.uri = uri
+        self.uri = resolve_address(uri)
         self.debug = debug
 
     async def connect(self):
         assert self.websocket is None, "Websocket already connected"
 
-        self.websocket = await websockets.connect(self.uri)
+        self.websocket = await websockets.connect(self.uri,open_timeout=3,ping_interval=3,ping_timeout=1)
 
     async def close(self):
         if self.receive_task_handle is not None:
@@ -44,7 +45,7 @@ class WebsocketInterface(PacketTransport):
         result = await self.websocket.recv()  # type: ignore
         if self.debug:
             print(f"{time.time() * 1000:8.3f}: RX {result}")
-        return [result]
+        return [result] # type: ignore
 
     async def __aenter__(self):
         await self.connect()
