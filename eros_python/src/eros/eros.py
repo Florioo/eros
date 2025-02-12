@@ -127,7 +127,7 @@ class ErosEndpoint(PacketTransport):
         self.eros = eros
         self.source = source
         self.target = target
-        self.unexpected_message_callback = None
+        self.unexpected_message_callback:Callable[[bytes], None]|None = None
         self.pending_messages = {}
         self.sequence = 0
         self.eros.add_endpoint(source=self.source, endpoint=self)
