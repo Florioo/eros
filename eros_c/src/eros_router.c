@@ -65,7 +65,7 @@ void eros_router_route(eros_router_t *router, eros_package_t *package, TickType_
             {
                 send_to_endpoint = true;
             }
-            else if ((router->endpoints[i]->type == EROS_BUFFERED_GATEWAY || router->endpoints[i]->type == EROS_UNBUFFERED_GATEWAY) && router->endpoints[i]->endpoint.buffered_gateway_endpoint.remote_realm_id == package->target.destination.realm_id)
+            else if ((router->endpoints[i]->type == EROS_GATEWAY_BUFFERED || router->endpoints[i]->type == EROS_UNBUFFERED_GATEWAY) && router->endpoints[i]->endpoint.buffered_gateway_endpoint.remote_realm_id == package->target.destination.realm_id)
             {
                 send_to_endpoint = true;
             }
