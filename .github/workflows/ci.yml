@@ -39,3 +39,16 @@ jobs:
 
       - name: Run C tests
         run: make test-c
+
+  esp_idf_example:
+    name: ESP-IDF example build (esp32s3)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build esp32_basic example
+        uses: espressif/esp-idf-ci-action@v1
+        with:
+          esp_idf_version: v6.0
+          target: esp32s3
+          path: examples/esp32_basic

@@ -1,0 +1,4 @@
+# Pull in the eros library from the repo root as a local component.
+dependencies:
+  eros:
+    path: ../../..
