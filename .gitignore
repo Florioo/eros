@@ -1,2 +1,24 @@
 **.pyc
-*/poetry.lock
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# uv / build outputs
+**/.venv/
+**/dist/
+**/build/
+**/*.egg-info/
+**/_version.py
+
+# C build outputs
+**.a
+**.cmake
+**/CMakeFiles
+**/CMakeCache.txt
+compile_commands.json
+
+# Editor / OS
+.vscode/.cache/
+.DS_Store

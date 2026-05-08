@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  python:
+    name: Python lint & test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+
+      - name: Sync dependencies
+        run: uv sync --all-extras --dev
+
+      - name: Lint (ruff)
+        run: uv run ruff check .
+
+      - name: Test (pytest)
+        run: make test-py
+
+  c:
+    name: C tests
+    runs-on: ubuntu-latest
+    env:
+      UNITY_DIR: ${{ github.workspace }}/.unity
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Unity test framework
+        run: git clone --depth 1 --branch v2.6.0 https://github.com/ThrowTheSwitch/Unity.git "$UNITY_DIR"
+
+      - name: Run C tests
+        run: make test-c
+
+  esp_idf_example:
+    name: ESP-IDF example build (esp32s3)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build esp32_basic example
+        uses: espressif/esp-idf-ci-action@v1
+        with:
+          esp_idf_version: v6.0
+          target: esp32s3
+          path: examples/esp32_basic

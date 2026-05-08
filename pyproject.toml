@@ -1,0 +1,42 @@
+[project]
+name = "eros"
+version = "0.1.0"
+description = "Eros communication library — Python client"
+readme = "README.md"
+requires-python = ">=3.12"
+authors = [{ name = "Floris Vernieuwe", email = "floris@vernieuwe.eu" }]
+
+dependencies = [
+    "aioserial>=1.3.1",
+    "cobs>=1.2.1",
+    "websockets>=14.2",
+    "pydantic>=2.10.6",
+    "bitstruct>=8.19.0",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.9.9",
+    "pytest>=8.3.5",
+    "pytest-cov>=6.0.0",
+]
+
+[tool.ruff]
+line-length = 140
+exclude = ["**.pyi", "**/.venv/**"]
+include = ["src/**.py", "test/**.py"]
+
+[tool.ruff.lint]
+select = ["E", "F"]
+ignore = ["E402"]
+
+[tool.pyright]
+ignore = ["**.pyi", "**/.venv/**"]
+
+[build-system]
+requires = ["uv_build>=0.5.15,<0.9.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "eros"
+module-root = "src"
