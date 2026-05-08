@@ -53,9 +53,8 @@ static void subscriber_task(void *arg)
 void app_main(void)
 {
     eros_router_t *router = eros_router_new(ROUTER_REALM, MAX_ENDPOINTS);
-
-    eros_port_task_create("eros_sub", subscriber_task, router, 4096);
-    /* Give the subscriber a moment to register before publishing starts. */
-    eros_port_sleep_ms(50);
-    eros_port_task_create("eros_pub", publisher_task, router, 4096);
+    xTaskCreate(publisher_task, "publisher_task", 4096, router, 5, NULL);
+    vTaskDelay(100 / portTICK_PERIOD_MS);
+    xTaskCreate(subscriber_task, "subscriber_task", 4096, router, 5, NULL);
+  
 }
