@@ -24,22 +24,18 @@ jobs:
         run: uv run ruff check .
 
       - name: Test (pytest)
-        run: uv run pytest
+        run: make test-py
 
   c:
-    name: C build (${{ matrix.os }})
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
+    name: C tests
+    runs-on: ubuntu-latest
+    env:
+      UNITY_DIR: ${{ github.workspace }}/.unity
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
 
-      - name: Configure
-        run: cmake -S . -B build
+      - name: Install Unity test framework
+        run: git clone --depth 1 --branch v2.6.0 https://github.com/ThrowTheSwitch/Unity.git "$UNITY_DIR"
 
-      - name: Build
-        run: cmake --build build --config Release
+      - name: Run C tests
+        run: make test-c
