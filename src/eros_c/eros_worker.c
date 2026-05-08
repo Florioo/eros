@@ -1,28 +1,24 @@
-
-
 #include "eros.h"
-#include <string.h>
-#include <stdlib.h>
+#include "eros_port.h"
+#include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include <assert.h>
-#include "freertos/task.h"
+#include <stdlib.h>
+#include <string.h>
 
 eros_worker_t *eros_worker_new(int queue_size)
 {
-    QueueHandle_t queue = xQueueCreate(queue_size, sizeof(eros_worker_task_t));
+    eros_port_queue_t *queue = eros_port_queue_create(queue_size, sizeof(eros_worker_task_t));
     assert(queue);
 
     eros_worker_t worker = {
         .data_queue = queue,
         .task = NULL,
     };
-    // Copy to heap
     eros_worker_t *worker_ptr = malloc(sizeof(eros_worker_t));
     memcpy(worker_ptr, &worker, sizeof(eros_worker_t));
 
-    // Create task
-    xTaskCreate(eros_worker_task, "eros_worker_task", 4096, worker_ptr, 5, &worker_ptr->task);
+    worker_ptr->task = eros_port_task_create("eros_worker_task", eros_worker_task, worker_ptr, 4096);
 
     return worker_ptr;
 }
@@ -35,13 +31,12 @@ void eros_worker_callback(eros_endpoint_t *endpoint, eros_package_t *package)
 
     eros_worker_t *worker = endpoint->endpoint.worker_endpoint.worker;
 
-    // Increase reference count
     eros_package_increase_reference(package);
     eros_worker_task_t task = {
         .package = package,
         .endpoint = endpoint,
     };
-    xQueueSend(worker->data_queue, &task, 0);
+    eros_port_queue_send(worker->data_queue, &task, 0);
 }
 
 void eros_worker_task(void *arg)
@@ -53,7 +48,10 @@ void eros_worker_task(void *arg)
 
     while (1)
     {
-        xQueueReceive(worker->data_queue, &task, portMAX_DELAY);
+        if (!eros_port_queue_recv(worker->data_queue, &task, EROS_WAIT_FOREVER))
+        {
+            continue;
+        }
 
         if (task.endpoint->endpoint.worker_endpoint.callback)
         {

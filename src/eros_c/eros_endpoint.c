@@ -23,7 +23,7 @@ eros_endpoint_t *eros_buffered_endpoint_new(int id, eros_router_t *router,
 {
   assert(router);
 
-  QueueHandle_t queue = xQueueCreate(queue_size, sizeof(eros_package_t *));
+  eros_port_queue_t *queue = eros_port_queue_create(queue_size, sizeof(eros_package_t *));
 
   if (queue == NULL)
   {
@@ -48,7 +48,7 @@ eros_endpoint_t *eros_buffered_endpoint_new(int id, eros_router_t *router,
 
   if (endpoint_ptr == NULL)
   {
-    vQueueDelete(queue);
+    eros_port_queue_destroy(queue);
     return NULL;
   }
 
@@ -94,7 +94,7 @@ eros_buffered_gateway_endpoint_new(int id, eros_router_t *router,
 {
   assert(router);
 
-  QueueHandle_t queue = xQueueCreate(queue_size, sizeof(eros_package_t *));
+  eros_port_queue_t *queue = eros_port_queue_create(queue_size, sizeof(eros_package_t *));
 
   if (queue == NULL)
   {
@@ -122,7 +122,7 @@ eros_buffered_gateway_endpoint_new(int id, eros_router_t *router,
 
   if (endpoint_ptr == NULL)
   {
-    vQueueDelete(queue);
+    eros_port_queue_destroy(queue);
     return NULL;
   }
 
@@ -212,13 +212,13 @@ void eros_endpoint_delete(eros_endpoint_t *endpoint)
   case EROS_ENDPOINT_BUFFERED:
     if (endpoint->endpoint.buffered_endpoint.queue != NULL)
     {
-      vQueueDelete(endpoint->endpoint.buffered_endpoint.queue);
+      eros_port_queue_destroy(endpoint->endpoint.buffered_endpoint.queue);
     }
     break;
   case EROS_GATEWAY_BUFFERED:
     if (endpoint->endpoint.buffered_gateway_endpoint.queue != NULL)
     {
-      vQueueDelete(endpoint->endpoint.buffered_gateway_endpoint.queue);
+      eros_port_queue_destroy(endpoint->endpoint.buffered_gateway_endpoint.queue);
     }
     break;
   default:
@@ -249,7 +249,7 @@ void eros_endpoint_subscribe_group(eros_endpoint_t *endpoint,
 }
 
 int eros_endpoint_send_data(eros_endpoint_t *endpoint, eros_id_t destination,
-                            uint8_t *data, size_t size, TickType_t timeout)
+                            uint8_t *data, size_t size, uint32_t timeout_ms)
 {
   eros_package_t *package = eros_package_new(data, size);
   if (package == NULL)
@@ -264,14 +264,14 @@ int eros_endpoint_send_data(eros_endpoint_t *endpoint, eros_id_t destination,
   eros_print_packag_debug("TX", package);
 
   // Route the package to the router
-  eros_router_route(endpoint->router, package, timeout);
+  eros_router_route(endpoint->router, package, timeout_ms);
 
   // Free the package (of not sent it will be freed)
   eros_package_delete(package);
   return 0;
 }
 int eros_endpoint_send_data_with_seq(eros_endpoint_t *endpoint, eros_id_t destination, uint8_t sequence,
-                                     uint8_t *data, size_t size, TickType_t timeout)
+                                     uint8_t *data, size_t size, uint32_t timeout_ms)
 {
   eros_package_t *package = eros_package_new(data, size);
   if (package == NULL)
@@ -287,7 +287,7 @@ int eros_endpoint_send_data_with_seq(eros_endpoint_t *endpoint, eros_id_t destin
   eros_print_packag_debug("TX", package);
 
   // Route the package to the router
-  eros_router_route(endpoint->router, package, timeout);
+  eros_router_route(endpoint->router, package, timeout_ms);
 
   // Free the package (of not sent it will be freed)
   eros_package_delete(package);
@@ -295,7 +295,7 @@ int eros_endpoint_send_data_with_seq(eros_endpoint_t *endpoint, eros_id_t destin
 }
 
 int eros_endpoint_publish_data(eros_endpoint_t *endpoint, eros_group_t group,
-                               uint8_t *data, size_t size, TickType_t timeout)
+                               uint8_t *data, size_t size, uint32_t timeout_ms)
 {
   eros_package_t *package = eros_package_new(data, size);
   if (package == NULL)
@@ -307,14 +307,14 @@ int eros_endpoint_publish_data(eros_endpoint_t *endpoint, eros_group_t group,
   package->type = EROS_PACKAGE_TYPE_GROUP;
   package->target.group = group;
 
-  eros_router_route(endpoint->router, package, timeout);
+  eros_router_route(endpoint->router, package, timeout_ms);
   eros_package_delete(package);
   return 0;
 }
 
 int eros_endpoint_publish_headered_data(eros_endpoint_t *endpoint,
                                         uint8_t *data, size_t size,
-                                        TickType_t timeout)
+                                        uint32_t timeout_ms)
 {
 
   eros_package_t *package = eros_headered_package_new(data, size);
@@ -326,54 +326,54 @@ int eros_endpoint_publish_headered_data(eros_endpoint_t *endpoint,
 
   eros_print_packag_debug("RX", package);
 
-  eros_router_route(endpoint->router, package, timeout);
+  eros_router_route(endpoint->router, package, timeout_ms);
   eros_package_delete(package);
   return 0;
 }
 
 int eros_endpoint_gateway_ingest(eros_endpoint_t *endpoint, uint8_t *data,
-                                 size_t size, TickType_t timeout)
+                                 size_t size, uint32_t timeout_ms)
 {
 
   eros_gateway_mode_enum_t mode = eros_endpoint_gateway_get_mode(endpoint);
 
   if (mode == EROS_GATEWAY_MODE_PROMISCUOUS)
   {
-    return eros_endpoint_publish_headered_data(endpoint, data, size, timeout);
+    return eros_endpoint_publish_headered_data(endpoint, data, size, timeout_ms);
   }
   else if (mode == EROS_GATEWAY_MODE_FIXED_GROUP)
   {
     return eros_endpoint_publish_data(
         endpoint, endpoint->endpoint.unbuffered_gateway_endpoint.fixed_group,
-        data, size, timeout);
+        data, size, timeout_ms);
   }
   else
   {
     return eros_endpoint_send_data(
         endpoint, endpoint->endpoint.unbuffered_gateway_endpoint.fixed_target,
-        data, size, timeout);
+        data, size, timeout_ms);
   }
 }
 eros_package_t *eros_buffered_endpoint_receive(eros_endpoint_t *endpoint,
-                                               TickType_t timeout)
+                                               uint32_t timeout_ms)
 {
   assert(endpoint);
   assert(endpoint->type == EROS_ENDPOINT_BUFFERED);
   eros_package_t *package = NULL;
-  xQueueReceive(endpoint->endpoint.buffered_endpoint.queue, &package, timeout);
+  eros_port_queue_recv(endpoint->endpoint.buffered_endpoint.queue, &package, timeout_ms);
   return package;
 }
 
 eros_package_t *
 eros_buffered_gateway_endpoint_receive(eros_endpoint_t *endpoint,
-                                       TickType_t timeout)
+                                       uint32_t timeout_ms)
 {
   assert(endpoint);
   assert(endpoint->type == EROS_GATEWAY_BUFFERED);
 
   eros_package_t *package = NULL;
-  xQueueReceive(endpoint->endpoint.buffered_gateway_endpoint.queue, &package,
-                timeout);
+  eros_port_queue_recv(endpoint->endpoint.buffered_gateway_endpoint.queue, &package,
+                       timeout_ms);
 
   // Add header
   eros_package_encode_header(package);
@@ -382,11 +382,10 @@ eros_buffered_gateway_endpoint_receive(eros_endpoint_t *endpoint,
 }
 
 int eros_endpoint_send(eros_endpoint_t *endpoint, eros_package_t *package,
-                       TickType_t timeout)
+                       uint32_t timeout_ms)
 {
   assert(endpoint);
   assert(package);
-  int ret = 0;
 
   // increment the reference count
   switch (endpoint->type)
@@ -394,9 +393,8 @@ int eros_endpoint_send(eros_endpoint_t *endpoint, eros_package_t *package,
   case EROS_ENDPOINT_BUFFERED:
     eros_package_increase_reference(package);
 
-    ret = xQueueSend(endpoint->endpoint.buffered_endpoint.queue, &package,
-                     timeout);
-    if (ret != pdPASS)
+    if (!eros_port_queue_send(endpoint->endpoint.buffered_endpoint.queue, &package,
+                              timeout_ms))
     {
       eros_package_decrease_reference(package);
       return -1;
@@ -406,9 +404,8 @@ int eros_endpoint_send(eros_endpoint_t *endpoint, eros_package_t *package,
   case EROS_GATEWAY_BUFFERED:
     eros_package_increase_reference(package);
 
-    ret = xQueueSend(endpoint->endpoint.buffered_gateway_endpoint.queue,
-                     &package, timeout);
-    if (ret != pdPASS)
+    if (!eros_port_queue_send(endpoint->endpoint.buffered_gateway_endpoint.queue,
+                              &package, timeout_ms))
     {
       eros_package_decrease_reference(package);
       return -1;

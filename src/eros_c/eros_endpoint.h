@@ -1,9 +1,8 @@
-#include "eros_package.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/queue.h"
-
 #ifndef EROS_ENDPOINT_H
 #define EROS_ENDPOINT_H
+
+#include "eros_package.h"
+#include "eros_port.h"
 
 typedef enum
 {
@@ -20,7 +19,7 @@ typedef enum
 
 typedef struct
 {
-  QueueHandle_t queue;
+  eros_port_queue_t *queue;
 } eros_buffered_endpoint_t;
 
 typedef struct eros_router_t eros_router_t;
@@ -46,7 +45,7 @@ typedef struct
 typedef struct
 {
   eros_realm_id_t remote_realm_id;
-  QueueHandle_t queue;
+  eros_port_queue_t *queue;
   eros_gateway_mode_enum_t gateway_mode;
   eros_id_t fixed_target;
   eros_group_t fixed_group;
@@ -102,7 +101,7 @@ eros_unbuffered_gateway_endpoint_new(int id, eros_router_t *router,
 eros_gateway_mode_enum_t
 eros_endpoint_gateway_get_mode(eros_endpoint_t *endpoint);
 int eros_endpoint_gateway_ingest(eros_endpoint_t *endpoint, uint8_t *data,
-                                 size_t size, TickType_t timeout);
+                                 size_t size, uint32_t timeout_ms);
 
 void eros_gateway_set_fixed_id_mode(eros_endpoint_t *endpoint,
                                     eros_id_t target);
@@ -116,17 +115,17 @@ void eros_endpoint_set_callback(eros_endpoint_t *endpoint,
 void eros_endpoint_subscribe_group(eros_endpoint_t *endpoint,
                                    eros_group_t group);
 int eros_endpoint_send_data(eros_endpoint_t *endpoint, eros_id_t destination,
-                            uint8_t *data, size_t size, TickType_t timeout);
+                            uint8_t *data, size_t size, uint32_t timeout_ms);
 int eros_endpoint_send_data_with_seq(eros_endpoint_t *endpoint, eros_id_t destination, uint8_t sequence,
-                                     uint8_t *data, size_t size, TickType_t timeout);
+                                     uint8_t *data, size_t size, uint32_t timeout_ms);
 int eros_endpoint_publish_data(eros_endpoint_t *endpoint, eros_group_t group,
-                               uint8_t *data, size_t size, TickType_t timeout);
+                               uint8_t *data, size_t size, uint32_t timeout_ms);
 eros_package_t *eros_buffered_endpoint_receive(eros_endpoint_t *endpoint,
-                                               TickType_t timeout);
+                                               uint32_t timeout_ms);
 eros_package_t *
 eros_buffered_gateway_endpoint_receive(eros_endpoint_t *endpoint,
-                                       TickType_t timeout);
+                                       uint32_t timeout_ms);
 int eros_endpoint_send(eros_endpoint_t *endpoint, eros_package_t *package,
-                       TickType_t timeout);
+                       uint32_t timeout_ms);
 
 #endif // EROS_ENDPOINT_H

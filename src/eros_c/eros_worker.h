@@ -1,15 +1,14 @@
-
-
-#include "eros_endpoint.h"
-#include "eros_router.h"
-
 #ifndef EROS_WORKER_H
 #define EROS_WORKER_H
 
+#include "eros_endpoint.h"
+#include "eros_port.h"
+#include "eros_router.h"
+
 struct eros_worker_t
 {
-    QueueHandle_t data_queue;
-    TaskHandle_t task;
+    eros_port_queue_t *data_queue;
+    eros_port_task_t  *task;
 };
 
 typedef struct

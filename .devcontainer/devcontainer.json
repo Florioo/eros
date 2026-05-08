@@ -10,7 +10,7 @@
         "CXX": "clang++"
     },
     "mounts": [
-        "source=eros-claude-config,target=/home/vscode/.claude,type=volume"
+        "source=eros-claude-config,target=/home/vscode/.claude,type=volume"	
     ],
     "features": {
         "ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {}
@@ -34,10 +34,10 @@
                 "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
                 "python.testing.pytestEnabled": true,
                 "python.testing.pytestArgs": [
-                    "eros_python/test"
+                    "test"
                 ]
             }
         }
     },
-    "postCreateCommand": "cd eros_python && uv sync || true"
+    "postCreateCommand": "uv sync || true"
 }

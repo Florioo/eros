@@ -17,7 +17,6 @@ async def perform_latency_test(endpoint: ErosEndpoint, payload: bytes = b"test")
 
 async def setup_loopback_test(transport: PacketTransport):
     eros = ErosInterface(transport)
-    await eros.start()
 
     endpoint = ErosEndpoint(
         eros=eros,
@@ -28,7 +27,7 @@ async def setup_loopback_test(transport: PacketTransport):
         await asyncio.wait_for(perform_latency_test(endpoint), timeout=1)
     except asyncio.TimeoutError:
         print("Timeout")
-    await eros.stop()
+    eros.stop()
 
 
 async def main():

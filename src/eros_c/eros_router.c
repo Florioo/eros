@@ -53,7 +53,7 @@ void eros_router_register_endpoint(eros_router_t *router, eros_endpoint_t *endpo
     router->endpoint_count++;
 }
 
-void eros_router_route(eros_router_t *router, eros_package_t *package, TickType_t timeout)
+void eros_router_route(eros_router_t *router, eros_package_t *package, uint32_t timeout_ms)
 {
     for (int i = 0; i < router->endpoint_count; i++)
     {
@@ -81,7 +81,7 @@ void eros_router_route(eros_router_t *router, eros_package_t *package, TickType_
 
         if (send_to_endpoint)
         {
-            if (eros_endpoint_send(router->endpoints[i], package, timeout))
+            if (eros_endpoint_send(router->endpoints[i], package, timeout_ms))
             {
                 // Do not print here because it will cause a infinite recursion
                 // printf("Failed to send package to endpoint %d\n", router->endpoints[i]->id.id);
