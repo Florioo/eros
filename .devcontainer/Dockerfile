@@ -22,6 +22,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         python3-venv \
     && rm -rf /var/lib/apt/lists/*
 
+# Unity C test framework — used by the host C tests (test/CMakeLists.txt picks
+# it up via $UNITY_DIR).
+ARG UNITY_REF=v2.6.0
+ENV UNITY_DIR=/opt/Unity
+RUN git clone --depth 1 --branch ${UNITY_REF} \
+        https://github.com/ThrowTheSwitch/Unity.git ${UNITY_DIR} \
+    && rm -rf ${UNITY_DIR}/.git
+
 # Install uv (Python package/project manager) — pinned by digest for reproducibility
 COPY --from=ghcr.io/astral-sh/uv@sha256:2381d6aa60c326b71fd40023f921a0a3b8f91b14d5db6b90402e65a635053709 /uv /uvx /bin/
 
