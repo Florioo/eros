@@ -305,7 +305,10 @@ int eros_endpoint_publish_data(eros_endpoint_t *endpoint, eros_group_t group,
 
   package->source = endpoint->id;
   package->type = EROS_PACKAGE_TYPE_GROUP;
-  package->target.group = group;
+  /* target is a union and group only overlays destination.id; assign through
+     destination so realm_id is not left as uninitialized malloc memory — a
+     promiscuous gateway encodes that nibble onto the wire. */
+  package->target.destination = (eros_id_t){.id = group, .realm_id = 0};
 
   eros_router_route(endpoint->router, package, timeout_ms);
   eros_package_delete(package);
@@ -375,8 +378,11 @@ eros_buffered_gateway_endpoint_receive(eros_endpoint_t *endpoint,
   eros_port_queue_recv(endpoint->endpoint.buffered_gateway_endpoint.queue, &package,
                        timeout_ms);
 
-  // Add header
-  eros_package_encode_header(package);
+  // Add header (only if we actually got a package — receive may have
+  // timed out with no data)
+  if (package != NULL) {
+    eros_package_encode_header(package);
+  }
 
   return package;
 }
